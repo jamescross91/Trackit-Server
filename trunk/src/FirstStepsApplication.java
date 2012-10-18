@@ -2,19 +2,6 @@ import org.restlet.Application;
 import org.restlet.Restlet;
 import org.restlet.routing.Router;
 
-//Another test
-
-// Rebasing 
-
-// Add another comment
-
-
-
-// Remote ch\ange
-
-//Local change
-
-
 public class FirstStepsApplication extends Application {
 
     /**
@@ -27,7 +14,7 @@ public class FirstStepsApplication extends Application {
 
         // Defines only one route
         router.attach("/hello", HelloWorldResource.class);
-
+        
         return router;
     }
 

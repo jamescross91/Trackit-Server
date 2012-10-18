@@ -10,8 +10,7 @@ public class launch {
 	    component.getServers().add(Protocol.HTTP, 2610);  
 	  
 	    // Attach the sample application.  
-	    component.getDefaultHost().attach("/trackit",  
-	            new FirstStepsApplication());  
+	    component.getDefaultHost().attach("/trackit",  new FirstStepsApplication());  
 	  
 	    // Start the component.  
 	    component.start();  
