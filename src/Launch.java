@@ -1,7 +1,7 @@
 import org.restlet.Component;
 import org.restlet.data.Protocol;
 
-public class launch {
+public class Launch {
 	public static void main(String[] args) throws Exception {  
 	    // Create a new Component.  
 	    Component component = new Component();  
@@ -10,7 +10,7 @@ public class launch {
 	    component.getServers().add(Protocol.HTTP, 2610);  
 	  
 	    // Attach the sample application.  
-	    component.getDefaultHost().attach("/trackit",  new FirstStepsApplication());  
+	    component.getDefaultHost().attach("/trackit",  new LocationApplication());  
 	  
 	    // Start the component.  
 	    component.start();  
