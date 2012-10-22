@@ -13,7 +13,7 @@ public class LocationApplication extends Application {
         Router router = new Router(getContext());
 
         // Defines only one route
-        router.attach("/hello", DeviceLocationResource.class);
+        router.attach("/child/location", DeviceLocationResource.class);
         
         return router;
     }
