@@ -4,9 +4,6 @@ import org.restlet.resource.Get;
 import org.restlet.resource.Post;
 import org.restlet.resource.ServerResource;
 
-/**
- * Resource which has only one representation.
- */
 public class DeviceLocationResource extends ServerResource {
 
     @Get

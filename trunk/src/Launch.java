@@ -3,6 +3,10 @@ import org.restlet.data.Protocol;
 
 public class Launch {
 	public static void main(String[] args) throws Exception {  
+		
+		TrackiTProperties props = new TrackiTProperties();
+		System.out.println(props.getProperty("dbName"));
+		
 	    // Create a new Component.  
 	    Component component = new Component();  
 	  
@@ -10,7 +14,7 @@ public class Launch {
 	    component.getServers().add(Protocol.HTTP, 2610);  
 	  
 	    // Attach the sample application.  
-	    component.getDefaultHost().attach("/trackit",  new LocationApplication());  
+	    component.getDefaultHost().attach("/device",  new LocationApplication());  
 	  
 	    // Start the component.  
 	    component.start();  
