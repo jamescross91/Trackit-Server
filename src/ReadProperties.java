@@ -7,23 +7,31 @@ import java.util.Properties;
 public class ReadProperties {
 
 	private Properties trackitProps = null;
-	
-	private Properties loadProps(){
-		 
-		try{
+
+	private void loadProps() {
+
+		try {
 			File propsFile = new File("TrackiT.properties");
 			FileInputStream fileInput = new FileInputStream(propsFile);
-			
+
 			trackitProps.load(fileInput);
 
 			fileInput.close();
-		} catch(IOException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-		return trackitProps;	
 	}
-	
-	//If !null check on trackit props
+
+	public String getProperty(String property) {
+		loadProps();
+		
+		if (trackitProps != null) {
+			return trackitProps.getProperty(property);
+		}
+		else{
+			return null;
+		}
+	}
+	// If !null check on trackit props
 
 }

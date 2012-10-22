@@ -3,10 +3,7 @@ import org.restlet.data.Protocol;
 
 public class Launch {
 	public static void main(String[] args) throws Exception {  
-		
-		TrackiTProperties props = new TrackiTProperties();
-		System.out.println(props.getProperty("dbName"));
-		
+			
 	    // Create a new Component.  
 	    Component component = new Component();  
 	  
