@@ -3,8 +3,9 @@ import org.restlet.data.Protocol;
 
 public class Launch {
 	public static void main(String[] args) throws Exception {  
-			
-	    // Create a new Component.  
+
+	    System.out.println(ReadProperties.getProperty("dbname"));
+		// Create a new Component.  
 	    Component component = new Component();  
 	  
 	    // Add a new HTTP server listening on port 8182.  
