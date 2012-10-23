@@ -4,9 +4,6 @@ import org.restlet.data.Protocol;
 public class Launch {
 	public static void main(String[] args) throws Exception {
 
-		System.out.println(ReadProperties.getProperty("dbdriver"));
-		DatabaseCore core = new DatabaseCore();
-
 		// Create a new Component.
 		Component component = new Component();
 
