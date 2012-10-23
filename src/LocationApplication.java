@@ -4,18 +4,19 @@ import org.restlet.routing.Router;
 
 public class LocationApplication extends Application {
 
-    /**
-     * Creates a root Restlet that will receive all incoming calls.
-     */
-    @Override
-    public synchronized Restlet createInboundRoot() {
-        // Create a router Restlet that routes each call to a new instance of HelloWorldResource.
-        Router router = new Router(getContext());
+	/**
+	 * Creates a root Restlet that will receive all incoming calls.
+	 */
+	@Override
+	public synchronized Restlet createInboundRoot() {
+		// Create a router Restlet that routes each call to a new instance of
+		// HelloWorldResource.
+		Router router = new Router(getContext());
 
-        // Defines only one route
-        router.attach("/child/location", DeviceLocationResource.class);
-        
-        return router;
-    }
+		// Defines only one route
+		router.attach("/child/location", DeviceLocationResource.class);
+
+		return router;
+	}
 
 }
