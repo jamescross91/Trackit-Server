@@ -3,7 +3,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
-
 //Class holding TrackiT application properties
 public class ReadProperties {
 
@@ -37,6 +36,3 @@ public class ReadProperties {
 	}
 
 }
-
-// String str = ReadProperties.getProperty("Key");
-
