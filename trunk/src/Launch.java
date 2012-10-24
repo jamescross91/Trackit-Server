@@ -1,3 +1,4 @@
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +20,13 @@ public class Launch {
 //			}
 //				
 //		}	
+		
+		java.util.Date today = new java.util.Date();
+		Timestamp currentTimeStamp = new Timestamp(today.getTime());
+		
+		//Eventually its going to be better to have something that builds an SQL statement for me, instead of like this!!
+		String sql = "INSERT INTO location_details VALUES (2, 1, '2010-06-21 13:28:17', 30, 10, 'gps', 2, 2, 1, 1, 1, 'guff', '4g', 2)";
+		DatabaseCore.executeSqlUpdate(sql);
 		
 		//Create a new Component.
 		Component component = new Component();

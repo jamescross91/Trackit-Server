@@ -54,7 +54,7 @@ public class DatabaseCore {
 		ResultSetMetaData meta = result.getMetaData();
 		int columns = meta.getColumnCount();
 		List<HashMap<String, Object>> list = new ArrayList<HashMap<String, Object>>();
- 
+
 		while (result.next()) {
 			HashMap<String, Object> row = new HashMap<String, Object>(columns);
 			for (int i = 1; i <= columns; ++i) {
@@ -84,6 +84,8 @@ public class DatabaseCore {
 				// Create an SQL statement and attempt to execute it against the
 				// database
 				statement = con.createStatement();
+
+				logger.info("Executing: " + sqlString);
 				result = statement.executeQuery(sqlString);
 
 				list = extractData(result);
@@ -105,8 +107,39 @@ public class DatabaseCore {
 
 		return list;
 	}
-}
 
-// /RegisterDevice calls DeviceManager calls DbManager, DeviceManager gets a
-// resultset from Db manager and does shit, then returns an instance of Device
-// to RegisterDevice after closing the connection
+	public static void executeSqlUpdate(String sqlString) throws Exception {
+		// Attempts to execute an insert statement against the database using a
+		// connection resource extracted from the pool
+		Connection con = null;
+		Statement statement = null;
+
+		if (pool == null) {
+			connect();
+		}
+		
+		try {
+			con = pool.getConnection(Long.parseLong(ReadProperties
+					.getProperty("pooltimeout")));
+
+			if (con != null) {
+				// Create the SQL statement from the string, and attempt to
+				// execute it against the database
+				statement = con.createStatement();
+
+				logger.info("Executing: " + sqlString);
+				statement.executeUpdate(sqlString);
+			} else {
+				logger.error("Critial error: unable to get access to the database because the pool was saturated with requests!");
+			}
+		} catch (SQLException e) {
+			logger.error("Error inserting data into the database, failed with: "
+					+ e.getMessage());
+		} finally {
+			// Do this in a finally block so we release the resource even if
+			// there is an exception!
+			statement.close();
+			con.close();
+		}
+	}
+}
