@@ -117,7 +117,7 @@ public class DatabaseCore {
 		if (pool == null) {
 			connect();
 		}
-		
+
 		try {
 			con = pool.getConnection(Long.parseLong(ReadProperties
 					.getProperty("pooltimeout")));
