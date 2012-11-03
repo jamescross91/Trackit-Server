@@ -16,12 +16,8 @@ public class Launch {
 //				
 //		}	
 		
-		User myUser = new User("jamescross91");
-		myUser.login("ohhai");
-
-		//Eventually its going to be better to have something that builds an SQL statement for me, instead of like this!!
-		String sql = "INSERT INTO location_details VALUES (3, 1, '2010-06-21 13:28:17', 30, 10, 'gps', 2, 2, 1, 1, 1, 'guff', '4g', 2)";
-		DatabaseCore.executeSqlUpdate(sql);
+		User newUser = new User("james");
+		System.out.println(newUser.login("passwordz"));
 		
 		//Create a new Component.
 		Component component = new Component();

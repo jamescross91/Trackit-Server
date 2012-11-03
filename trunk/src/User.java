@@ -7,25 +7,115 @@ import java.util.List;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
+import javax.naming.spi.DirStateFactory.Result;
+
+import org.apache.log4j.Logger;
 
 public class User {
 	private String userName;
+	private String passwordPlain;
+	private String passwordHash;
+	private String firstName;
+	private String lastName;
+	private String emailAddress;
+
+	private static Logger logger = Logger.getLogger(DatabaseCore.class);
 
 	public User(String userName) {
 		this.userName = userName;
 	}
 
 	public boolean login(String password) {
-		String sqlString = "SELECT * FROM parent_details WHERE username = "
-				+ userName;
+		loadUser();
 		try {
-			List<HashMap<String, Object>> result = DatabaseCore.executeSqlQuery(sqlString);
+			return validatePassword(password, passwordHash);
+		} catch (NumberFormatException | NoSuchAlgorithmException
+				| InvalidKeySpecException e) {
+			logger.error("Error validating user password for user: "
+					+ this.userName);
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	public HashMap<String, Object> createUser(String password,
+			String firstName, String lastName, String emailAddress) {
+
+		String error = new String();
+		HashMap<String, Object> result = new HashMap<String, Object>();
+		boolean dbSuccess = false;
+
+		// Attempt to hash the password. If this fails, catch the exception, log
+		// it, and return the result hashmap to the calling function
+		try {
+			passwordHash = createHash(password);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+			error = "Error creating password hash for input password: "
+					+ password;
+			result.put("Created", false);
+			result.put("Reason", error);
+
+			logger.error(error);
+			e.printStackTrace();
+
+			return result;
+		}
+
+		String sqlString = "INSERT INTO"
+				+ "`"
+				+ ReadProperties.getProperty("parentdetails")
+				+ "`"
+				+ "(username, password, first_name, last_name, email_address) VALUES ("
+				+ "\"" + userName + "\"," + "\"" + passwordHash + "\"," + "\""
+				+ firstName + "\"," + "\"" + lastName + "\"," + "\""
+				+ emailAddress + "\"" + ")";
+
+		try {
+			dbSuccess = DatabaseCore.executeSqlUpdate(sqlString);
+		} catch (Exception e) {
+			error = "Error adding parent details to the database, username is: "
+					+ userName;
+			logger.error(error);
+			result.put("Created", false);
+			result.put("Reason", error);
 			e.printStackTrace();
 		}
 
-		return false;
+		result.put("Created", dbSuccess);
+		return result;
+	}
+
+	// Load the user from the database
+	private boolean loadUser() {
+		List<HashMap<String, Object>> result = null;
+
+		String sqlString = "SELECT * FROM `parent_details` WHERE username ="
+				+ "\"" + userName + "\"";
+		try {
+			result = DatabaseCore.executeSqlQuery(sqlString);
+		} catch (Exception e) {
+			logger.error("Error extracting parent details from the database, username is: "
+					+ userName);
+			e.printStackTrace();
+		}
+
+		if (result.size() > 1) {
+			logger.error("Multiple users found for: " + userName
+					+ " something is broken!  Declining login");
+			return false;
+		}
+
+		if (result.size() == 0)
+			return false;
+
+		HashMap<String, Object> thisUser = result.get(0);
+		userName = (String) thisUser.get("username");
+		passwordHash = (String) thisUser.get("password");
+		firstName = (String) thisUser.get("first_name");
+		lastName = (String) thisUser.get("last_name");
+		emailAddress = (String) thisUser.get("email_address");
+
+		return true;
 	}
 
 	/*

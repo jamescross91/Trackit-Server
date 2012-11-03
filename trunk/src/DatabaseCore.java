@@ -18,6 +18,8 @@ public class DatabaseCore {
 	private static ConnectionPool pool = null;
 	private static Logger logger = Logger.getLogger(DatabaseCore.class);
 
+	//TODO Refactor to use prepared statements instead of statements
+	
 	private static void connect() throws Exception {
 		try {
 			// Load the MySQL driver required to connect to the database server,
@@ -62,7 +64,6 @@ public class DatabaseCore {
 			}
 			list.add(row);
 		}
-
 		return list;
 	}
 
@@ -104,11 +105,10 @@ public class DatabaseCore {
 			statement.close();
 			con.close();
 		}
-
 		return list;
 	}
 
-	public static void executeSqlUpdate(String sqlString) throws Exception {
+	public static boolean executeSqlUpdate(String sqlString) throws Exception {
 		// Attempts to execute an insert statement against the database using a
 		// connection resource extracted from the pool
 		Connection con = null;
@@ -131,15 +131,18 @@ public class DatabaseCore {
 				statement.executeUpdate(sqlString);
 			} else {
 				logger.error("Critial error: unable to get access to the database because the pool was saturated with requests!");
+				return false;
 			}
 		} catch (SQLException e) {
 			logger.error("Error inserting data into the database, failed with: "
 					+ e.getMessage());
+			return false;
 		} finally {
 			// Do this in a finally block so we release the resource even if
 			// there is an exception!
 			statement.close();
 			con.close();
-		}
+		}		
+		return true;
 	}
 }
