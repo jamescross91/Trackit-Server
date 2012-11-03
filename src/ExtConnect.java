@@ -1,3 +1,9 @@
+import java.math.BigInteger;
+import java.security.SecureRandom;
+import java.sql.PreparedStatement;
+
+import org.apache.log4j.Logger;
+
 //Class containing common functionality for applications wishing to connect to the system externally
 public class ExtConnect {
 	// Authenticate
@@ -7,32 +13,55 @@ public class ExtConnect {
 	// Privs will need to be changed in DatabaseCore. Try mapping from a class
 	// to a username/password - which will in turn be configured in MySQL
 
-	public boolean login(String username, String password) {
-		// Perform an SQL query against the database to check and if the string
-		// username exists, and if it does
-		// get the salted hash of its password
+	private static Logger logger = Logger.getLogger(DatabaseCore.class);
 
-		String sqlString = "SELECT * FROM parent_details WHERE username = "
-				+ username;
-		try {
-			DatabaseCore.executeSqlQuery(sqlString);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		return false;
-	}
-
-	public boolean authenticateDevice(String username, double deviceID) {
+	public boolean authenticateDevice(String username, double deviceID,
+			String authToken) {
 		// Check that for the parents username provided, this is a valid device
 		// ID
 
-		// Could also check to see when this device ID was last authenticated
-		// with a username and password
-		// and if a timeout is period is exceeded, request these details again
-		// from the device
-
+		String sqlString = "SELECT * FROM " + ReadProperties.getProperty("devicedetails") + "WHERE device_id = " + "\"" + deviceID + "\"";
+		
 		return true;
+	}
+
+	// Generate an authentication token, save it to the database, and return it
+	private String generateAuth(double deviceID) {
+		String token = generateToken();
+
+		String sqlString = "UPDATE "
+				+ ReadProperties.getProperty("devicedetails")
+				+ "SET auth_token=" + token + "WHERE device_id = " + "\""
+				+ deviceID + "\"";
+		
+		try {
+			if(DatabaseCore.executeSqlUpdate(sqlString))
+			{
+				return token;
+			}
+		} catch (Exception e) {
+			logger.error("Unable to write authentication token to the database for device id: " + deviceID);
+			e.printStackTrace();		
+		}
+		
+
+		return new String();
+	}
+
+	private String generateToken() {
+		// Create a random authentication token to be used with the device, in
+		// the same way we create a salt for passwords
+		SecureRandom randomSalt = new SecureRandom();
+		byte[] salt = new byte[Integer.parseInt(ReadProperties
+				.getProperty("salt_bytes")) * 2];
+		randomSalt.nextBytes(salt);
+
+		BigInteger bigInt = new BigInteger(1, salt);
+		String hex = bigInt.toString(16);
+		int paddingLength = (salt.length * 2) - hex.length();
+		if (paddingLength > 0)
+			return String.format("%0" + paddingLength + "d", 0) + hex;
+		else
+			return hex;
 	}
 }
