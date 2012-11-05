@@ -1,13 +1,15 @@
 import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
 
@@ -18,8 +20,6 @@ public class DatabaseCore {
 	private static ConnectionPool pool = null;
 	private static Logger logger = Logger.getLogger(DatabaseCore.class);
 
-	//TODO Refactor to use prepared statements instead of statements
-	
 	private static void connect() throws Exception {
 		try {
 			// Load the MySQL driver required to connect to the database server,
@@ -67,16 +67,19 @@ public class DatabaseCore {
 		return list;
 	}
 
-	public static List<HashMap<String, Object>> executeSqlQuery(String sqlString)
+	public static List<HashMap<String, Object>> executeSqlQuery(
+			String statementString, LinkedHashMap<Object, String> data)
 			throws Exception {
 		ResultSet result = null;
 		Connection con = null;
-		Statement statement = null;
-		List<HashMap<String, Object>> list = null;
 
-		if (pool == null) {
+		// Faster, cacheable, and helps to prevent SQL injection attacks vs a
+		// normal statement
+		PreparedStatement statement = null;
+		List<HashMap<String, Object>> list = new ArrayList<HashMap<String, Object>>();
+
+		if (pool == null)
 			connect();
-		}
 
 		try {
 			con = pool.getConnection(Long.parseLong(ReadProperties
@@ -84,18 +87,56 @@ public class DatabaseCore {
 			if (con != null) {
 				// Create an SQL statement and attempt to execute it against the
 				// database
-				statement = con.createStatement();
+				statement = con.prepareStatement(statementString);
 
-				logger.info("Executing: " + sqlString);
-				result = statement.executeQuery(sqlString);
+				// Iterate over the map containing datatype:data. Switch on
+				// datatype and call the relavent function
+				// To insert this data into the prepared statement
+				int index = 1;
+				for (Entry<Object, String> entry : data.entrySet()) {
+
+					// Switch on the datatype, and then verify it
+					switch (entry.getValue()) {
+					case "string": {
+						String datatype = entry.getKey().getClass().getName();
+						if (datatype != "java.lang.String") {
+							logger.error("Datatype of data: "
+									+ entry.getValue()
+									+ " expected string, found: " + datatype);
+							throw (new Exception(
+									"Invalid data type in SQL parameter"));
+						}
+						statement.setString(index, (String) entry.getKey());
+						break;
+					}
+
+					case "int": {
+						String datatype = entry.getValue().getClass().getName();
+						if (datatype != "java.lang.Integer") {
+							logger.error("Datatype of data: "
+									+ entry.getValue()
+									+ " expected int, found: " + datatype);
+							throw (new Exception(
+									"Invalid data type in SQL parameter"));
+						}
+						statement.setString(index, (String) entry.getKey());
+						break;
+					}
+					}
+					index++;
+				}
+
+				logger.info("Executing: " + statement.toString());
+				result = statement.executeQuery();
 
 				list = extractData(result);
+
 			} else {
 				logger.error("Critial error: unable to get access to the database because the pool was saturated with requests!");
 			}
 
 		} catch (Exception e) {
-			logger.error("Error executing SQL statement: " + sqlString
+			logger.error("Error executing SQL statement: " + statement
 					+ " on the database\n");
 			e.printStackTrace();
 		} finally {
@@ -108,27 +149,90 @@ public class DatabaseCore {
 		return list;
 	}
 
-	public static boolean executeSqlUpdate(String sqlString) throws Exception {
+	public static boolean executeSqlUpdate(String statementString,
+			LinkedHashMap<Object, String> data) throws Exception {
 		// Attempts to execute an insert statement against the database using a
 		// connection resource extracted from the pool
 		Connection con = null;
-		Statement statement = null;
+		// Faster, cacheable, and helps to prevent SQL injection attacks vs a
+		// normal statement
+		PreparedStatement statement = null;
 
-		if (pool == null) {
+		if (pool == null)
 			connect();
-		}
 
 		try {
 			con = pool.getConnection(Long.parseLong(ReadProperties
 					.getProperty("pooltimeout")));
-
 			if (con != null) {
-				// Create the SQL statement from the string, and attempt to
-				// execute it against the database
-				statement = con.createStatement();
 
-				logger.info("Executing: " + sqlString);
-				statement.executeUpdate(sqlString);
+				statement = con.prepareStatement(statementString);
+
+				// Iterate over the map containing datatype:data. Switch on
+				// datatype and call the relavent function
+				// To insert this data into the prepared statement
+				int index = 1;
+				for (Entry<Object, String> entry : data.entrySet()) {
+
+					// Switch on the datatype, and then verify it
+					switch (entry.getValue()) {
+					case "string": {
+						String datatype = entry.getKey().getClass().getName();
+						if (datatype != "java.lang.String") {
+							logger.error("Datatype of data: "
+									+ entry.getValue()
+									+ " expected string, found: " + datatype);
+							throw (new Exception(
+									"Invalid data type in SQL parameter"));
+						}
+						statement.setString(index, (String) entry.getKey());
+						break;
+					}
+					
+					case "double": {
+						String datatype = entry.getKey().getClass().getName();
+						if (datatype != "java.lang.Double") {
+							logger.error("Datatype of data: "
+									+ entry.getValue()
+									+ " expected double, found: " + datatype);
+							throw (new Exception(
+									"Invalid data type in SQL parameter"));
+						}
+						statement.setDouble(index, (Double) entry.getKey());
+						break;
+					}
+					
+					case "boolean": {
+						String datatype = entry.getKey().getClass().getName();
+						if (datatype != "java.lang.Boolean") {
+							logger.error("Datatype of data: "
+									+ entry.getValue()
+									+ " expected double, found: " + datatype);
+							throw (new Exception(
+									"Invalid data type in SQL parameter"));
+						}
+						statement.setBoolean(index, (Boolean) entry.getKey());
+						break;
+					}
+
+					case "int": {
+						String datatype = entry.getKey().getClass().getName();
+						if (datatype != "java.lang.Integer") {
+							logger.error("Datatype of data: "
+									+ entry.getValue()
+									+ " expected int, found: " + datatype);
+							throw (new Exception(
+									"Invalid data type in SQL parameter"));
+						}
+						statement.setInt(index, (Integer) entry.getKey());
+						break;
+					}
+					}
+					index++;
+				}
+
+				logger.info("Executing: " + statement.toString());
+				statement.executeUpdate();
 			} else {
 				logger.error("Critial error: unable to get access to the database because the pool was saturated with requests!");
 				return false;
@@ -142,7 +246,7 @@ public class DatabaseCore {
 			// there is an exception!
 			statement.close();
 			con.close();
-		}		
+		}
 		return true;
 	}
 }

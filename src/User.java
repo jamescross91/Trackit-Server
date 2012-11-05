@@ -3,11 +3,11 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
-import javax.naming.spi.DirStateFactory.Result;
 
 import org.apache.log4j.Logger;
 
@@ -26,7 +26,11 @@ public class User {
 	}
 
 	public boolean login(String password) {
-		loadUser();
+		if(!loadUser()){
+			logger.warn("Unable to load information for user: " + userName + " login is declined");
+			return false;
+		}
+		
 		try {
 			return validatePassword(password, passwordHash);
 		} catch (NumberFormatException | NoSuchAlgorithmException
@@ -60,18 +64,17 @@ public class User {
 
 			return result;
 		}
-
-		String sqlString = "INSERT INTO"
-				+ "`"
-				+ ReadProperties.getProperty("parentdetails")
-				+ "`"
-				+ "(username, password, first_name, last_name, email_address) VALUES ("
-				+ "\"" + userName + "\"," + "\"" + passwordHash + "\"," + "\""
-				+ firstName + "\"," + "\"" + lastName + "\"," + "\""
-				+ emailAddress + "\"" + ")";
+		
+		String sqlString = "INSERT INTO parent_details(username, password, first_name, last_name, email_address) values(?, ?, ?, ?, ?)";
+		LinkedHashMap<Object, String> data = new LinkedHashMap<Object, String>();
+		data.put(userName, "string");
+		data.put(passwordHash, "string");
+		data.put(firstName, "string");
+		data.put(lastName, "string");
+		data.put(emailAddress, "string");
 
 		try {
-			dbSuccess = DatabaseCore.executeSqlUpdate(sqlString);
+			dbSuccess = DatabaseCore.executeSqlUpdate(sqlString, data);
 		} catch (Exception e) {
 			error = "Error adding parent details to the database, username is: "
 					+ userName;
@@ -88,20 +91,23 @@ public class User {
 	// Load the user from the database
 	private boolean loadUser() {
 		List<HashMap<String, Object>> result = null;
-
-		String sqlString = "SELECT * FROM `parent_details` WHERE username ="
-				+ "\"" + userName + "\"";
+		
+		String sqlString = "SELECT * FROM parent_details WHERE username = ?";
+		LinkedHashMap<Object, String> data = new LinkedHashMap<Object, String>();
+		data.put(userName, "string");
+		
 		try {
-			result = DatabaseCore.executeSqlQuery(sqlString);
+			result = DatabaseCore.executeSqlQuery(sqlString, data);
 		} catch (Exception e) {
 			logger.error("Error extracting parent details from the database, username is: "
 					+ userName);
 			e.printStackTrace();
 		}
 
+		
 		if (result.size() > 1) {
 			logger.error("Multiple users found for: " + userName
-					+ " something is broken!  Declining login");
+					+ " something is broken!");
 			return false;
 		}
 
