@@ -16,8 +16,10 @@ public class Launch {
 //				
 //		}	
 		
-		User newUser = new User("james");
-		System.out.println(newUser.login("passwordz"));
+		User newUser = new User("james1");
+		newUser.createUser("password", "James", "Cross", "jamescross91@gmail.com");
+		
+		//System.out.println(newUser.login("password"));
 		
 		//Create a new Component.
 		Component component = new Component();
