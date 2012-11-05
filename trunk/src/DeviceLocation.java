@@ -7,9 +7,9 @@ public class DeviceLocation extends ExtConnect {
 	private double latitude;
 	private double longitude;
 	private String location_source;
-	private int accuracy;
-	public int altitude;
-	private int bearing;
+	private double accuracy;
+	public double altitude;
+	private double bearing;
 	private int battery;
 	private boolean is_charging;
 	private String network;
@@ -19,16 +19,16 @@ public class DeviceLocation extends ExtConnect {
 	private static Logger logger = Logger.getLogger(DeviceLocation.class);
 
 	public DeviceLocation(int device_id, String parent_username,
-			String auth_token, String entry_time, double latitude,
-			double longitude, String location_source, int altitude,
-			int accuracy, int bearing, int battery, boolean is_charging,
+			String auth_token, double latitude,
+			double longitude, String location_source, double altitude,
+			double accuracy, double bearing, int battery, boolean is_charging,
 			String network, String data_connection, double velocity) {
 
 		// Set the private variables for this instance
 		this.device_id = device_id;
 		this.parent_username = parent_username;
 		this.auth_token = auth_token;
-		this.entry_time = entry_time;
+//		this.entry_time = entry_time;
 		this.latitude = latitude;
 		this.longitude = longitude;
 		this.location_source = location_source;
@@ -38,21 +38,22 @@ public class DeviceLocation extends ExtConnect {
 		this.battery = battery;
 		this.is_charging = is_charging;
 		this.network = network;
+		this.data_connection = data_connection;
 		this.velocity = velocity;
 	}
 
 	public boolean persistLocation() {
 		boolean dbSuccess = false;
 
-		if (!validateData() || authenticateDevice())
-			return false;
+//		if (!validateData() || authenticateDevice())
+//			return false;
 
 		//TODO Add the date/time the device creates the location instead of when its inserted into the database
 		
 		String sqlString = "INSERT INTO location_details (device_id, latitude, longitude, location_source, "
 				+ "accuracy, altitude, bearing, battery, is_charging, network, data_connection, velocity) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		LinkedHashMap<Object, String> data = new LinkedHashMap<Object, String>();
-		data.put(device_id, "string");
+		data.put(device_id, "int");
 		//data.put("entry_time", "timestamp");
 		data.put(latitude, "double");
 		data.put(longitude, "double");

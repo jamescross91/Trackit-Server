@@ -22,7 +22,7 @@ public abstract class ExtConnect {
 	
 	private static Logger logger = Logger.getLogger(ExtConnect.class);
 
-	public boolean authenticateDevice() {
+	protected boolean authenticateDevice() {
 		// Check that for the parents username provided, this is a valid device
 		// ID
 
