@@ -52,19 +52,20 @@ public class DeviceLocation extends ExtConnect {
 		
 		String sqlString = "INSERT INTO location_details (device_id, latitude, longitude, location_source, "
 				+ "accuracy, altitude, bearing, battery, is_charging, network, data_connection, velocity) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-		LinkedHashMap<Object, String> data = new LinkedHashMap<Object, String>();
-		data.put(device_id, "int");
+		LinkedHashMap<String, Object> data = new LinkedHashMap<String, Object>();
+		data.put("device_id", device_id);
 		//data.put("entry_time", "timestamp");
-		data.put(latitude, "double");
-		data.put(longitude, "double");
-		data.put(location_source, "string");
-		data.put(altitude, "int");
-		data.put(bearing, "int");
-		data.put(battery, "int");
-		data.put(is_charging, "boolean");
-		data.put(network, "string");
-		data.put(data_connection, "string");
-		data.put(velocity, "double");
+		data.put("latitude", latitude);
+		data.put("longitude", longitude);
+		data.put("location_source", location_source);
+		data.put("accuracy", accuracy);
+		data.put("altitude", altitude);
+		data.put("bearing", bearing);
+		data.put("battery", battery);
+		data.put("is_charging", is_charging);
+		data.put("network", network);
+		data.put("data_connection", data_connection);
+		data.put("velocity", velocity);
 
 		try {
 			dbSuccess = DatabaseCore.executeSqlUpdate(sqlString, data);

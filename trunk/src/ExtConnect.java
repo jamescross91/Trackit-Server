@@ -29,8 +29,8 @@ public abstract class ExtConnect {
 		List<HashMap<String, Object>> result = null;
 
 		String sqlString = "SELECT * FROM device_details WHERE device_id = ?";
-		LinkedHashMap<Object, String> data = new LinkedHashMap<Object, String>();
-		data.put(device_id, "string");
+		LinkedHashMap<String, Object> data = new LinkedHashMap<String, Object>();
+		data.put("device_id", device_id);
 
 		try {
 			result = DatabaseCore.executeSqlQuery(sqlString, data);
@@ -73,9 +73,9 @@ public abstract class ExtConnect {
 		String token = generateToken();
 
 		String sqlString = "UPDATE device_details SET auth_token = ? WHERE device_id = ?";
-		LinkedHashMap<Object, String> data = new LinkedHashMap<Object, String>();
-		data.put(token, "string");
-		data.put(device_id, "string");
+		LinkedHashMap<String, Object> data = new LinkedHashMap<String, Object>();
+		data.put("token", token);
+		data.put("device_id", device_id);
 
 		try {
 			if (DatabaseCore.executeSqlUpdate(sqlString, data)) {
