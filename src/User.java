@@ -66,12 +66,12 @@ public class User {
 		}
 		
 		String sqlString = "INSERT INTO parent_details(username, password, first_name, last_name, email_address) values(?, ?, ?, ?, ?)";
-		LinkedHashMap<Object, String> data = new LinkedHashMap<Object, String>();
-		data.put(userName, "string");
-		data.put(passwordHash, "string");
-		data.put(firstName, "string");
-		data.put(lastName, "string");
-		data.put(emailAddress, "string");
+		LinkedHashMap<String, Object> data = new LinkedHashMap<String, Object>();
+		data.put("userName", userName);
+		data.put("passwordHash", passwordHash);
+		data.put("firstName", firstName);
+		data.put("lastName", lastName);
+		data.put("emailAddress", emailAddress);
 
 		try {
 			dbSuccess = DatabaseCore.executeSqlUpdate(sqlString, data);
@@ -93,8 +93,8 @@ public class User {
 		List<HashMap<String, Object>> result = null;
 		
 		String sqlString = "SELECT * FROM parent_details WHERE username = ?";
-		LinkedHashMap<Object, String> data = new LinkedHashMap<Object, String>();
-		data.put(userName, "string");
+		LinkedHashMap<String, Object> data = new LinkedHashMap<String, Object>();
+		data.put("userName", userName);
 		
 		try {
 			result = DatabaseCore.executeSqlQuery(sqlString, data);

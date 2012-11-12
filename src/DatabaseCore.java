@@ -68,7 +68,7 @@ public class DatabaseCore {
 	}
 
 	public static List<HashMap<String, Object>> executeSqlQuery(
-			String statementString, LinkedHashMap<Object, String> data)
+			String statementString, LinkedHashMap<String, Object> data)
 			throws Exception {
 		ResultSet result = null;
 		Connection con = null;
@@ -93,44 +93,38 @@ public class DatabaseCore {
 				// datatype and call the relavent function
 				// To insert this data into the prepared statement
 				int index = 1;
-				for (Entry<Object, String> entry : data.entrySet()) {
-
+				for (Entry<String, Object> entry : data.entrySet()) {
+					String datatype = entry.getValue().getClass().getName();
 					// Switch on the datatype, and then verify it
-					switch (entry.getValue()) {
-					case "string": {
-						String datatype = entry.getKey().getClass().getName();
-						if (datatype != "java.lang.String") {
-							logger.error("Datatype of data: "
-									+ entry.getValue()
-									+ " expected string, found: " + datatype);
-							throw (new Exception(
-									"Invalid data type in SQL parameter"));
-						}
+					switch (datatype) {
+					case "java.lang.String": {
 						statement.setString(index, (String) entry.getKey());
 						break;
+					}
+					case "java.lang.Double": {
+						statement.setDouble(index, (Double) entry.getValue());
+						break;
+					}
+					case "java.lang.Boolean": {
+						statement.setBoolean(index, (Boolean) entry.getValue());
+						break;
+					}
+					case "java.lang.Int": {
+						statement.setInt(index, (Integer) entry.getValue());
+						break;
+					}
+					default: {
+						logger.error("Unable to map datatype: " + datatype
+								+ " to a prepared statement function");
+					}
+						index++;
 					}
 
-					case "int": {
-						String datatype = entry.getValue().getClass().getName();
-						if (datatype != "java.lang.Integer") {
-							logger.error("Datatype of data: "
-									+ entry.getValue()
-									+ " expected int, found: " + datatype);
-							throw (new Exception(
-									"Invalid data type in SQL parameter"));
-						}
-						statement.setString(index, (String) entry.getKey());
-						break;
-					}
-					}
-					index++;
+					logger.info("Executing: " + statement.toString());
+					result = statement.executeQuery();
+
+					list = extractData(result);
 				}
-
-				logger.info("Executing: " + statement.toString());
-				result = statement.executeQuery();
-
-				list = extractData(result);
-
 			} else {
 				logger.error("Critial error: unable to get access to the database because the pool was saturated with requests!");
 			}
@@ -150,7 +144,7 @@ public class DatabaseCore {
 	}
 
 	public static boolean executeSqlUpdate(String statementString,
-			LinkedHashMap<Object, String> data) throws Exception {
+			LinkedHashMap<String, Object> data) throws Exception {
 		// Attempts to execute an insert statement against the database using a
 		// connection resource extracted from the pool
 		Connection con = null;
@@ -172,60 +166,29 @@ public class DatabaseCore {
 				// datatype and call the relavent function
 				// To insert this data into the prepared statement
 				int index = 1;
-				for (Entry<Object, String> entry : data.entrySet()) {
-
+				for (Entry<String, Object> entry : data.entrySet()) {
+					String datatype = entry.getValue().getClass().getName();
 					// Switch on the datatype, and then verify it
-					switch (entry.getValue()) {
-					case "string": {
-						String datatype = entry.getKey().getClass().getName();
-						if (datatype != "java.lang.String") {
-							logger.error("Datatype of data: "
-									+ entry.getValue()
-									+ " expected string, found: " + datatype);
-							throw (new Exception(
-									"Invalid data type in SQL parameter"));
-						}
+					switch (datatype) {
+					case "java.lang.String": {
 						statement.setString(index, (String) entry.getKey());
 						break;
 					}
-					
-					case "double": {
-						String datatype = entry.getKey().getClass().getName();
-						if (datatype != "java.lang.Double") {
-							logger.error("Datatype of data: "
-									+ entry.getValue()
-									+ " expected double, found: " + datatype);
-							throw (new Exception(
-									"Invalid data type in SQL parameter"));
-						}
-						statement.setDouble(index, (Double) entry.getKey());
+					case "java.lang.Double": {
+						statement.setDouble(index, (Double) entry.getValue());
 						break;
 					}
-					
-					case "boolean": {
-						String datatype = entry.getKey().getClass().getName();
-						if (datatype != "java.lang.Boolean") {
-							logger.error("Datatype of data: "
-									+ entry.getValue()
-									+ " expected double, found: " + datatype);
-							throw (new Exception(
-									"Invalid data type in SQL parameter"));
-						}
-						statement.setBoolean(index, (Boolean) entry.getKey());
+					case "java.lang.Boolean": {
+						statement.setBoolean(index, (Boolean) entry.getValue());
 						break;
 					}
-
-					case "int": {
-						String datatype = entry.getKey().getClass().getName();
-						if (datatype != "java.lang.Integer") {
-							logger.error("Datatype of data: "
-									+ entry.getValue()
-									+ " expected int, found: " + datatype);
-							throw (new Exception(
-									"Invalid data type in SQL parameter"));
-						}
-						statement.setInt(index, (Integer) entry.getKey());
+					case "java.lang.Integer": {
+						statement.setInt(index, (Integer) entry.getValue());
 						break;
+					}
+					default: {
+						logger.error("Unable to map datatype: " + datatype
+								+ " to a prepared statement function");
 					}
 					}
 					index++;

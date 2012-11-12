@@ -15,7 +15,9 @@ public class LocationApplication extends Application {
 
 		// Defines only one route
 		router.attach("/child/location", DeviceLocationResource.class);
-
+		router.attach("/child/login", DeviceLoginResource.class);
+		
+		
 		return router;
 	}
 
