@@ -7,6 +7,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 public class DeviceLogin extends ExtConnect {
+	private String deviceID;
 	private String username;
 	private String password;
 	private String make;
@@ -18,8 +19,9 @@ public class DeviceLogin extends ExtConnect {
 
 	// This is the process of a new device connecting to the application for the
 	// first time
-	public DeviceLogin(String username, String password, String make,
+	public DeviceLogin(String deviceID, String username, String password, String make,
 			String model, double phone_number, String OS, boolean is_child) {
+		this.deviceID = deviceID;
 		this.username = username;
 		this.password = password;
 		this.make = make;
@@ -46,16 +48,17 @@ public class DeviceLogin extends ExtConnect {
 
 		return (authToken);
 	}
-
+	
 	private boolean createDevice() {
-		String sqlString = "INSERT INTO device_details(parent_username, make, model, phone_number, OS, is_child) values(username, make, model, phone_number, ?)";
+		String sqlString = "INSERT INTO device_details(device_id, parent_username, make, model, phone_number, OS, is_child) values(?, ?, ?, ?, ?, ?, ?)";
 
 		LinkedHashMap<String, Object> data = new LinkedHashMap<String, Object>();
+		data.put("deviceID", deviceID);
 		data.put("username", username);
 		data.put("make", make);
 		data.put("model", model);
-		data.put("OS", OS);
 		data.put("phone_number", phone_number);
+		data.put("OS", OS);
 		data.put("is_child", is_child);
 
 		try {
