@@ -28,6 +28,7 @@ public class DeviceLogin extends ExtConnect {
 		this.model = model;
 		this.phone_number = phone_number;
 		this.is_child = is_child;
+		this.OS = OS;
 	}
 
 	public String login() {

@@ -98,7 +98,7 @@ public class DatabaseCore {
 					// Switch on the datatype, and then verify it
 					switch (datatype) {
 					case "java.lang.String": {
-						statement.setString(index, (String) entry.getKey());
+						statement.setString(index, (String) entry.getValue());
 						break;
 					}
 					case "java.lang.Double": {
@@ -171,7 +171,7 @@ public class DatabaseCore {
 					// Switch on the datatype, and then verify it
 					switch (datatype) {
 					case "java.lang.String": {
-						statement.setString(index, (String) entry.getKey());
+						statement.setString(index, (String) entry.getValue());
 						break;
 					}
 					case "java.lang.Double": {

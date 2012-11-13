@@ -28,8 +28,11 @@ public class DeviceLoginResource extends ServerResource {
 		// public DeviceLogin(String username, String password, String make,
 		// String model, double phone_number, String OS, boolean is_child) {
 		DeviceLogin newDevice = new DeviceLogin(id, username, password, make,
-				model, phone_number, OS, false);
-
+				model, phone_number, OS, true);
+		
+		String authToken = newDevice.login();
+		
+		
 		System.out.println("hello");
 
 		// result.
