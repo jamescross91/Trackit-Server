@@ -45,6 +45,10 @@ public class User {
 	public HashMap<String, Object> createUser(String password,
 			String firstName, String lastName, String emailAddress) {
 
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.emailAddress = emailAddress;
+		
 		String error = new String();
 		HashMap<String, Object> result = new HashMap<String, Object>();
 		boolean dbSuccess = false;
