@@ -4,8 +4,7 @@ import org.restlet.resource.Get;
 import org.restlet.resource.Post;
 import org.restlet.resource.ServerResource;
 
-
-public class DeviceLoginResource extends ServerResource{
+public class DeviceLoginResource extends ServerResource {
 	@Get
 	public String represent() {
 		return "hello, world";
@@ -17,10 +16,23 @@ public class DeviceLoginResource extends ServerResource{
 		Representation result = null;
 		Form form = new Form(entity);
 
+		String username = form.getFirstValue("username");
+		String password = form.getFirstValue("password");
+		String make = form.getFirstValue("make");
+		String model = form.getFirstValue("model");
+		String OS = form.getFirstValue("OS");
+		double phone_number = Double.parseDouble(form
+				.getFirstValue("phone_number"));
+		//
+		// public DeviceLogin(String username, String password, String make,
+		// String model, double phone_number, String OS, boolean is_child) {
+		DeviceLogin newDevice = new DeviceLogin(username, password, make,
+				model, phone_number, OS, false);
+
 		System.out.println("hello");
 
-		//result.
-		
+		// result.
+
 		return (result);
 	}
 }
