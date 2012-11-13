@@ -67,43 +67,4 @@ public abstract class ExtConnect {
 
 		return true;
 	}
-
-	// Generate an authentication token, save it to the database, and return it
-	private String generateAuth() {
-		String token = generateToken();
-
-		String sqlString = "UPDATE device_details SET auth_token = ? WHERE device_id = ?";
-		LinkedHashMap<String, Object> data = new LinkedHashMap<String, Object>();
-		data.put("token", token);
-		data.put("device_id", device_id);
-
-		try {
-			if (DatabaseCore.executeSqlUpdate(sqlString, data)) {
-				return token;
-			}
-		} catch (Exception e) {
-			logger.error("Unable to write authentication token to the database for device id: "
-					+ device_id);
-			e.printStackTrace();
-		}
-
-		return new String();
-	}
-
-	private String generateToken() {
-		// Create a random authentication token to be used with the device, in
-		// the same way we create a salt for passwords
-		SecureRandom randomSalt = new SecureRandom();
-		byte[] salt = new byte[Integer.parseInt(ReadProperties
-				.getProperty("salt_bytes")) * 2];
-		randomSalt.nextBytes(salt);
-
-		BigInteger bigInt = new BigInteger(1, salt);
-		String hex = bigInt.toString(16);
-		int paddingLength = (salt.length * 2) - hex.length();
-		if (paddingLength > 0)
-			return String.format("%0" + paddingLength + "d", 0) + hex;
-		else
-			return hex;
-	}
 }
