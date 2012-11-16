@@ -8,7 +8,7 @@ import org.apache.log4j.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class DeviceLogin extends ExtConnect {
+public class DeviceLogin extends ExtConnect implements Jsonifiable{
 	private String deviceID;
 	private String username;
 	private String password;
