@@ -8,7 +8,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 //Class containing common functionality for applications wishing to connect to the system externally
-public abstract class ExtConnect {
+public abstract class ExtConnect{
 	// Authenticate
 	// Login
 	// Execute SQL - remember we will need to handle both querys and inserts
@@ -23,8 +23,6 @@ public abstract class ExtConnect {
 	private static Logger logger = Logger.getLogger(ExtConnect.class);
 
 	protected boolean authenticateDevice() {
-		// Check that for the parents username provided, this is a valid device
-		// ID
 
 		List<HashMap<String, Object>> result = null;
 
