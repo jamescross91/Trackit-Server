@@ -1,5 +1,8 @@
 import org.restlet.Component;
+import org.restlet.data.Form;
 import org.restlet.data.Protocol;
+import org.restlet.representation.Representation;
+import org.restlet.service.ConverterService;
 
 public class Launch {
 	public static void main(String[] args) throws Exception {
@@ -15,9 +18,6 @@ public class Launch {
 //			}
 //				
 //		}	
-		
-		User newUser = new User("james1");
-		newUser.createUser("password", "James", "Cross", "jamescross91@gmail.com");
 		
 		//System.out.println(newUser.login("password"));
 		
