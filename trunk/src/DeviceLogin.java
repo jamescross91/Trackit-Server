@@ -1,6 +1,8 @@
 import java.math.BigInteger;
 import java.security.SecureRandom;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.json.JSONException;
@@ -18,12 +20,12 @@ public class DeviceLogin extends ExtConnect {
 	private String authToken = new String();
 	private boolean loginSuccess;
 	private static Logger logger = Logger.getLogger(DeviceLogin.class);
-	
 
 	// This is the process of a new device connecting to the application for the
 	// first time
-	public DeviceLogin(String deviceID, String username, String password, String make,
-			String model, double phone_number, String OS, boolean is_child) {
+	public DeviceLogin(String deviceID, String username, String password,
+			String make, String model, double phone_number, String OS,
+			boolean is_child) {
 		this.deviceID = deviceID;
 		this.username = username;
 		this.password = password;
@@ -41,36 +43,74 @@ public class DeviceLogin extends ExtConnect {
 		if (!thisUser.login(password))
 			return new String();
 
-		// Did the device get inserted correctly?
-		if (!createDevice())
-			return new String();
+		// If the device does not exist, create it
+		if (!deviceExists()) {
+			// Did the device get inserted correctly?
+			if (!createDevice())
+				return new String();
+		}
 
 		String authToken = generateAuth();
 		// Was the auth token generated and saved as expected?
 		if (authToken == new String())
 			return new String();
-		
+
 		loginSuccess = true;
 		this.authToken = authToken;
 
 		return (authToken);
 	}
-	
-	//JSonify the object we need
-	public JSONObject toJson(){
+
+	// JSonify the object we need
+	public JSONObject toJson() {
 		JSONObject object = new JSONObject();
 		try {
 			object.put("loginSuccess", true);
 			object.put("authToken", authToken);
 		} catch (JSONException e) {
-			logger.error("An exception occured while trying to Jsonify the login result for device id " + deviceID);
+			logger.error("An exception occured while trying to Jsonify the login result for device id "
+					+ deviceID);
 			e.printStackTrace();
 		}
-		
-		
+
 		return object;
 	}
-	
+
+	private boolean deviceExists() {
+		List<HashMap<String, Object>> result = null;
+		String sqlString = "SELECT parent_username FROM device_details WHERE device_id = ?";
+
+		LinkedHashMap<String, Object> data = new LinkedHashMap<String, Object>();
+		data.put("deviceID", deviceID);
+
+		try {
+			result = DatabaseCore.executeSqlQuery(sqlString, data);
+		} catch (Exception e) {
+			logger.error("Error extracting device details when attempting to login.  Device ID is "
+					+ deviceID);
+			e.printStackTrace();
+		}
+
+		if (result.size() > 1) {
+			logger.error("Multiple devices found for: " + deviceID
+					+ " something is broken!");
+			return false;
+		}
+
+		if (result.size() == 0)
+			return false;
+
+		HashMap<String, Object> thisUser = result.get(0);
+		String user = (String) thisUser.get("parent_username");
+
+		// Does the username in the database match that for the device?
+		if (user.compareTo(username) != 0)
+			return false;
+
+		return true;
+
+	}
+
 	private boolean createDevice() {
 		String sqlString = "INSERT INTO device_details(device_id, parent_username, make, model, phone_number, OS, is_child) values(?, ?, ?, ?, ?, ?, ?)";
 
