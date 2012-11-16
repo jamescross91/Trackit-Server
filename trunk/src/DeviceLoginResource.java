@@ -1,4 +1,5 @@
 import org.restlet.data.Form;
+import org.restlet.ext.json.JsonRepresentation;
 import org.restlet.representation.Representation;
 import org.restlet.resource.Get;
 import org.restlet.resource.Post;
@@ -32,6 +33,8 @@ public class DeviceLoginResource extends ServerResource {
 		
 		String authToken = newDevice.login();
 		
+		if(authToken != new String())
+			result = new JsonRepresentation(newDevice.toJson());
 		
 		System.out.println("hello");
 
