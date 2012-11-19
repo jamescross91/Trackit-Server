@@ -25,7 +25,7 @@ public class DeviceLocation extends ExtConnect {
 			String network, String data_connection, double velocity) {
 
 		// Set the private variables for this instance
-		this.device_id  device_id;
+		this.device_id = device_id;
 		this.parent_username = parent_username;
 		this.auth_token = auth_token;
 //		this.entry_time = entry_time;
