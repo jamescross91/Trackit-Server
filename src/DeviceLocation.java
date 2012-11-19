@@ -18,14 +18,14 @@ public class DeviceLocation extends ExtConnect {
 
 	private static Logger logger = Logger.getLogger(DeviceLocation.class);
 
-	public DeviceLocation(int device_id, String parent_username,
+	public DeviceLocation(String device_id, String parent_username,
 			String auth_token, double latitude,
 			double longitude, String location_source, double altitude,
 			double accuracy, double bearing, int battery, boolean is_charging,
 			String network, String data_connection, double velocity) {
 
 		// Set the private variables for this instance
-		this.device_id = device_id;
+		this.device_id  device_id;
 		this.parent_username = parent_username;
 		this.auth_token = auth_token;
 //		this.entry_time = entry_time;

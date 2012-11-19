@@ -16,7 +16,7 @@ public abstract class ExtConnect{
 	// Privs will need to be changed in DatabaseCore. Try mapping from a class
 	// to a username/password - which will in turn be configured in MySQL
 
-	protected int device_id;
+	protected String device_id;
 	protected String parent_username;
 	protected String auth_token;
 	
