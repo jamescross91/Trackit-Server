@@ -27,6 +27,7 @@ public class DeviceLogin extends ExtConnect implements Jsonifiable{
 			String make, String model, double phone_number, String OS,
 			boolean is_child) {
 		this.deviceID = deviceID;
+		this.device_id = deviceID;
 		this.username = username;
 		this.password = password;
 		this.make = make;
@@ -48,9 +49,11 @@ public class DeviceLogin extends ExtConnect implements Jsonifiable{
 			// Did the device get inserted correctly?
 			if (!createDevice())
 				return new String();
-		}
 
-		String authToken = generateAuth();
+		}
+		
+		String authToken = getAuth();
+		
 		// Was the auth token generated and saved as expected?
 		if (authToken == new String())
 			return new String();
@@ -134,6 +137,34 @@ public class DeviceLogin extends ExtConnect implements Jsonifiable{
 		}
 
 		return false;
+	}
+	
+	private String getAuth(){
+		String sqlString = "SELECT auth_token FROM device_details WHERE device_id = ?";
+		List<HashMap<String, Object>> result = null;
+		
+		LinkedHashMap<String, Object> data = new LinkedHashMap<String, Object>();
+		data.put("device_id", deviceID);
+		
+		try {
+			result = DatabaseCore.executeSqlQuery(sqlString, data);
+		} catch (Exception e) {
+			logger.error("Error extracting device details when attempting to login.  Device ID is "
+					+ deviceID);
+			e.printStackTrace();
+		}
+
+		if (result.size() > 1) {
+			logger.error("Multiple devices found for: " + deviceID
+					+ " something is broken!");
+			return "";
+		}
+
+		if (result.size() == 0)
+			return "";
+
+		HashMap<String, Object> thisAuth = result.get(0);
+		return (String) thisAuth.get("auth_token");
 	}
 
 	// Generate an authentication token, save it to the database, and return it
