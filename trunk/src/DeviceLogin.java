@@ -8,7 +8,7 @@ import org.apache.log4j.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class DeviceLogin extends ExtConnect implements Jsonifiable{
+public class DeviceLogin extends ExtConnect implements Jsonifiable {
 	private String deviceID;
 	private String username;
 	private String password;
@@ -18,7 +18,7 @@ public class DeviceLogin extends ExtConnect implements Jsonifiable{
 	private boolean is_child;
 	private String OS;
 	private String authToken = new String();
-	private boolean loginSuccess;
+	private boolean loginSuccess = false;
 	private static Logger logger = Logger.getLogger(DeviceLogin.class);
 
 	// This is the process of a new device connecting to the application for the
@@ -37,38 +37,45 @@ public class DeviceLogin extends ExtConnect implements Jsonifiable{
 		this.OS = OS;
 	}
 
-	public String login() {
+	public boolean login() {
+		String authToken;
 		User thisUser = new User(username);
 
 		// Do these credentials authenticate?
-		if (!thisUser.login(password))
-			return new String();
+		if (!thisUser.login(password)) {
+			logger.warn("Device attempted to login with invalid credentials");
+			return false;
+		}
 
 		// If the device does not exist, create it
 		if (!deviceExists()) {
 			// Did the device get inserted correctly?
 			if (!createDevice())
-				return new String();
-
+				return false;
+			
+			//Did a new authentication token get created successfully?
+			authToken = generateAuth();
+			if(authToken.compareTo("") == 0)
+				return false;
 		}
-		
-		String authToken = getAuth();
-		
+
+		 authToken = getAuth();
+
 		// Was the auth token generated and saved as expected?
 		if (authToken == new String())
-			return new String();
+			return false;
 
-		loginSuccess = true;
 		this.authToken = authToken;
+		this.loginSuccess = true;
 
-		return (authToken);
+		return true;
 	}
 
 	// JSonify the object we need
 	public JSONObject toJson() {
 		JSONObject object = new JSONObject();
 		try {
-			object.put("loginSuccess", true);
+			object.put("loginSuccess", loginSuccess);
 			object.put("authToken", authToken);
 		} catch (JSONException e) {
 			logger.error("An exception occured while trying to Jsonify the login result for device id "
@@ -138,14 +145,14 @@ public class DeviceLogin extends ExtConnect implements Jsonifiable{
 
 		return false;
 	}
-	
-	private String getAuth(){
+
+	private String getAuth() {
 		String sqlString = "SELECT auth_token FROM device_details WHERE device_id = ?";
 		List<HashMap<String, Object>> result = null;
-		
+
 		LinkedHashMap<String, Object> data = new LinkedHashMap<String, Object>();
 		data.put("device_id", deviceID);
-		
+
 		try {
 			result = DatabaseCore.executeSqlQuery(sqlString, data);
 		} catch (Exception e) {
