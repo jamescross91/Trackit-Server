@@ -31,10 +31,9 @@ public class DeviceLoginResource extends ServerResource {
 		DeviceLogin newDevice = new DeviceLogin(id, username, password, make,
 				model, phone_number, OS, true);
 		
-		String authToken = newDevice.login();
+		newDevice.login();
 		
-		if(authToken != new String())
-			result = new JsonRepresentation(newDevice.toJson());
+		result = new JsonRepresentation(newDevice.toJson());
 		
 		System.out.println("hello");
 
