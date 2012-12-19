@@ -24,12 +24,12 @@ public class Launch {
 		//Create a new Component.
 		Component component = new Component();
 
-		//Create a new HTTPS server listening on port 8182.
+		//Create a new HTTPS server listening on port 2620.
 		Server server = component.getServers().add(Protocol.HTTPS, 2610);
 		Series<Parameter> params = server.getContext().getParameters(); 
 		
-		params.add("sslContextFactory", "org.restlet.engine.security.DefaultSslContextFactory");
-		params.add("keyStorePath", "<path>server.jks");
+		params.add("sslContextFactory", "org.restlet.ext.ssl.PkixSslContextFactory");
+		params.add("keystorePath", "server.jks");
 		params.add("keystorePassword", "password");
 		params.add("keyPassword", "password");
 		params.add("keystoreType", "JKS");
