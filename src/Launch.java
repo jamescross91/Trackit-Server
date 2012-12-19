@@ -1,8 +1,8 @@
 import org.restlet.Component;
-import org.restlet.data.Form;
+import org.restlet.Server;
+import org.restlet.data.Parameter;
 import org.restlet.data.Protocol;
-import org.restlet.representation.Representation;
-import org.restlet.service.ConverterService;
+import org.restlet.util.Series;
 
 public class Launch {
 	public static void main(String[] args) throws Exception {
@@ -24,8 +24,15 @@ public class Launch {
 		//Create a new Component.
 		Component component = new Component();
 
-		//Create a new HTTP server listening on port 8182.
-		component.getServers().add(Protocol.HTTP, 2610);
+		//Create a new HTTPS server listening on port 8182.
+		Server server = component.getServers().add(Protocol.HTTPS, 2610);
+		Series<Parameter> params = server.getContext().getParameters(); 
+		
+		params.add("sslContextFactory", "org.restlet.engine.security.DefaultSslContextFactory");
+		params.add("keyStorePath", "/lib/server.jks");
+		params.add("keystorePassword", "password");
+		params.add("keyPassword", "password");
+		params.add("keystoreType", "JKS");
 
 		//Attach the sample application.
 		component.getDefaultHost().attach("/device", new LocationApplication());
