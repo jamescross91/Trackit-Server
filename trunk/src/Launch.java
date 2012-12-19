@@ -29,7 +29,7 @@ public class Launch {
 		Series<Parameter> params = server.getContext().getParameters(); 
 		
 		params.add("sslContextFactory", "org.restlet.engine.security.DefaultSslContextFactory");
-		params.add("keyStorePath", "/lib/server.jks");
+		params.add("keyStorePath", "<path>server.jks");
 		params.add("keystorePassword", "password");
 		params.add("keyPassword", "password");
 		params.add("keystoreType", "JKS");
