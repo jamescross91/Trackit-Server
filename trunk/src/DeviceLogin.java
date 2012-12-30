@@ -27,6 +27,8 @@ public class DeviceLogin extends ExtConnect implements Jsonifiable {
 			String make, String model, double phone_number, String OS,
 			boolean is_child) {
 		this.deviceID = deviceID;
+		if(deviceID.compareTo("") == 0)
+			this.deviceID = generateToken();
 		this.device_id = deviceID;
 		this.username = username;
 		this.password = password;
