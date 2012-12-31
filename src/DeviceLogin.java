@@ -29,7 +29,6 @@ public class DeviceLogin extends ExtConnect implements Jsonifiable {
 		this.deviceID = deviceID;
 		if(deviceID.compareTo("") == 0)
 			this.deviceID = generateToken();
-		this.device_id = deviceID;
 		this.username = username;
 		this.password = password;
 		this.make = make;
@@ -124,14 +123,13 @@ public class DeviceLogin extends ExtConnect implements Jsonifiable {
 	}
 
 	private boolean createDevice() {
-		String sqlString = "INSERT INTO device_details(device_id, parent_username, make, model, phone_number, OS, is_child) values(?, ?, ?, ?, ?, ?, ?)";
+		String sqlString = "INSERT INTO device_details(device_id, parent_username, make, model, OS, is_child) values(?, ?, ?, ?, ?, ?)";
 
 		LinkedHashMap<String, Object> data = new LinkedHashMap<String, Object>();
 		data.put("deviceID", deviceID);
 		data.put("username", username);
 		data.put("make", make);
 		data.put("model", model);
-		data.put("phone_number", phone_number);
 		data.put("OS", OS);
 		data.put("is_child", is_child);
 
@@ -183,7 +181,7 @@ public class DeviceLogin extends ExtConnect implements Jsonifiable {
 		String sqlString = "UPDATE device_details SET auth_token = ? WHERE device_id = ?";
 		LinkedHashMap<String, Object> data = new LinkedHashMap<String, Object>();
 		data.put("token", token);
-		data.put("device_id", device_id);
+		data.put("device_id", deviceID);
 
 		try {
 			if (DatabaseCore.executeSqlUpdate(sqlString, data)) {
@@ -191,7 +189,7 @@ public class DeviceLogin extends ExtConnect implements Jsonifiable {
 			}
 		} catch (Exception e) {
 			logger.error("Unable to write authentication token to the database for device id: "
-					+ device_id);
+					+ deviceID);
 			e.printStackTrace();
 		}
 
