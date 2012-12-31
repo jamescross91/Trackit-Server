@@ -37,7 +37,7 @@ public class DeviceLocationResource extends ServerResource {
 //				double accuracy, double bearing, int battery, boolean is_charging,
 //				String network, String data_connection, double velocity) {
 
-		DeviceLocation locInput = new DeviceLocation(deviceId, "jamescross91", "", lat, lng, provider, altitude, accuracy, bearing, battery, charging, "guff", "3g", speed);
+		DeviceLocation locInput = new DeviceLocation(deviceId, "james1", "", lat, lng, provider, altitude, accuracy, bearing, battery, charging, "guff", "3g", speed);
 		locInput.persistLocation();
 		
 		System.out.println("My current latitude is " + lat

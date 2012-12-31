@@ -49,12 +49,12 @@ public abstract class ExtConnect{
 
 		// Check the username provided against the database
 		HashMap<String, Object> thisDevice = result.get(0);
-		if ((String) thisDevice.get("parent_username") != parent_username) {
-			logger.warn("Device " + device_id
-					+ " is attempting to connect with an invalid username: "
-					+ parent_username + ". Denying access");
-			return false;
-		}
+//		if ((String) thisDevice.get("parent_username") != parent_username) {
+//			logger.warn("Device " + device_id
+//					+ " is attempting to connect with an invalid username: "
+//					+ parent_username + ". Denying access");
+//			return false;
+//		}
 
 		if ((String) thisDevice.get("auth_token") != auth_token) {
 			logger.warn("Device "
