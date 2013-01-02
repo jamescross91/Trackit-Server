@@ -2,13 +2,13 @@ import java.util.LinkedHashMap;
 
 import org.apache.log4j.Logger;
 
-public class DeviceLocation extends ExtConnect {
+public class DeviceLocation extends Device {
 	private String entry_time;
 	private double latitude;
 	private double longitude;
 	private String location_source;
 	private double accuracy;
-	public double altitude;
+	private double altitude;
 	private double bearing;
 	private int battery;
 	private boolean is_charging;
