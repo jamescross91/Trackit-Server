@@ -24,6 +24,7 @@ public class DeviceLocationResource extends ServerResource {
 		double bearing =Double.parseDouble(form.getFirstValue("bearing"));
 		double speed = Double.parseDouble(form.getFirstValue("speed"));
 		String deviceId = form.getFirstValue("deviceID");
+		String authToken = form.getFirstValue("authToken");
 //		int battery = Integer.parseInt(form.getFirstValue("battlevel"));
 //		boolean charging = Boolean.parseBoolean(form.getFirstValue("charging"));
 
@@ -37,7 +38,7 @@ public class DeviceLocationResource extends ServerResource {
 //				double accuracy, double bearing, int battery, boolean is_charging,
 //				String network, String data_connection, double velocity) {
 
-		DeviceLocation locInput = new DeviceLocation(deviceId, "james1", "", lat, lng, provider, altitude, accuracy, bearing, battery, charging, "guff", "3g", speed);
+		DeviceLocation locInput = new DeviceLocation(deviceId, authToken, lat, lng, provider, altitude, accuracy, bearing, battery, charging, "guff", "3g", speed);
 		locInput.persistLocation();
 		
 		System.out.println("My current latitude is " + lat
