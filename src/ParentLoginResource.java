@@ -23,13 +23,14 @@ public class ParentLoginResource extends ServerResource {
 		String model = form.getFirstValue("model");
 		String OS = form.getFirstValue("OS");
 		String id = form.getFirstValue("deviceID");
+		String gcm = form.getFirstValue("gcm_token");
 		double phone_number = Double.parseDouble(form
 				.getFirstValue("phoneNumber"));
 		//
 		// public DeviceLogin(String username, String password, String make,
 		// String model, double phone_number, String OS, boolean is_child) {
 		DeviceLogin newDevice = new DeviceLogin(id, username, password, make,
-				model, phone_number, OS, false);
+				model, phone_number, OS, false, gcm);
 		
 		newDevice.login();
 		
