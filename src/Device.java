@@ -51,7 +51,9 @@ public class Device{
 		// Check the username provided against the database
 		HashMap<String, Object> thisDevice = result.get(0);
 
-		if ((String) thisDevice.get("auth_token") != auth_token) {
+		String token = (String) thisDevice.get("auth_token");
+		
+		if (token.compareTo(auth_token) != 0) {
 			logger.warn("Device "
 					+ device_id
 					+ " is attempting to connect with an invalid authentication token");
