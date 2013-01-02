@@ -8,14 +8,9 @@ import org.apache.log4j.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class DeviceLogin extends ExtConnect implements Jsonifiable {
-	private String deviceID;
+public class DeviceLogin extends Device implements Jsonifiable {
 	private String username;
 	private String password;
-	private String make;
-	private String model;
-	private double phone_number;
-	private boolean is_child;
 	private String OS;
 	private String authToken = new String();
 	private boolean loginSuccess = false;
@@ -26,9 +21,9 @@ public class DeviceLogin extends ExtConnect implements Jsonifiable {
 	public DeviceLogin(String deviceID, String username, String password,
 			String make, String model, double phone_number, String OS,
 			boolean is_child) {
-		this.deviceID = deviceID;
+		this.device_id = deviceID;
 		if(deviceID.compareTo("") == 0)
-			this.deviceID = generateToken();
+			this.device_id = generateToken();
 		this.username = username;
 		this.password = password;
 		this.make = make;
@@ -80,7 +75,7 @@ public class DeviceLogin extends ExtConnect implements Jsonifiable {
 			object.put("authToken", authToken);
 		} catch (JSONException e) {
 			logger.error("An exception occured while trying to Jsonify the login result for device id "
-					+ deviceID);
+					+ device_id);
 			e.printStackTrace();
 		}
 
@@ -92,18 +87,18 @@ public class DeviceLogin extends ExtConnect implements Jsonifiable {
 		String sqlString = "SELECT parent_username FROM device_details WHERE device_id = ?";
 
 		LinkedHashMap<String, Object> data = new LinkedHashMap<String, Object>();
-		data.put("deviceID", deviceID);
+		data.put("deviceID", device_id);
 
 		try {
 			result = DatabaseCore.executeSqlQuery(sqlString, data);
 		} catch (Exception e) {
 			logger.error("Error extracting device details when attempting to login.  Device ID is "
-					+ deviceID);
+					+ device_id);
 			e.printStackTrace();
 		}
 
 		if (result.size() > 1) {
-			logger.error("Multiple devices found for: " + deviceID
+			logger.error("Multiple devices found for: " + device_id
 					+ " something is broken!");
 			return false;
 		}
@@ -126,7 +121,7 @@ public class DeviceLogin extends ExtConnect implements Jsonifiable {
 		String sqlString = "INSERT INTO device_details(device_id, parent_username, make, model, OS, is_child) values(?, ?, ?, ?, ?, ?)";
 
 		LinkedHashMap<String, Object> data = new LinkedHashMap<String, Object>();
-		data.put("deviceID", deviceID);
+		data.put("deviceID", device_id);
 		data.put("username", username);
 		data.put("make", make);
 		data.put("model", model);
@@ -151,18 +146,18 @@ public class DeviceLogin extends ExtConnect implements Jsonifiable {
 		List<HashMap<String, Object>> result = null;
 
 		LinkedHashMap<String, Object> data = new LinkedHashMap<String, Object>();
-		data.put("device_id", deviceID);
+		data.put("device_id", device_id);
 
 		try {
 			result = DatabaseCore.executeSqlQuery(sqlString, data);
 		} catch (Exception e) {
 			logger.error("Error extracting device details when attempting to login.  Device ID is "
-					+ deviceID);
+					+ device_id);
 			e.printStackTrace();
 		}
 
 		if (result.size() > 1) {
-			logger.error("Multiple devices found for: " + deviceID
+			logger.error("Multiple devices found for: " + device_id
 					+ " something is broken!");
 			return "";
 		}
@@ -181,7 +176,7 @@ public class DeviceLogin extends ExtConnect implements Jsonifiable {
 		String sqlString = "UPDATE device_details SET auth_token = ? WHERE device_id = ?";
 		LinkedHashMap<String, Object> data = new LinkedHashMap<String, Object>();
 		data.put("token", token);
-		data.put("device_id", deviceID);
+		data.put("device_id", device_id);
 
 		try {
 			if (DatabaseCore.executeSqlUpdate(sqlString, data)) {
@@ -189,7 +184,7 @@ public class DeviceLogin extends ExtConnect implements Jsonifiable {
 			}
 		} catch (Exception e) {
 			logger.error("Unable to write authentication token to the database for device id: "
-					+ deviceID);
+					+ device_id);
 			e.printStackTrace();
 		}
 
