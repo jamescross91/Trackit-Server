@@ -18,7 +18,7 @@ public class DeviceLocation extends Device {
 
 	private static Logger logger = Logger.getLogger(DeviceLocation.class);
 
-	public DeviceLocation(String device_id, String parent_username,
+	public DeviceLocation(String device_id,
 			String auth_token, double latitude, double longitude,
 			String location_source, double altitude, double accuracy,
 			double bearing, int battery, boolean is_charging, String network,
@@ -26,7 +26,6 @@ public class DeviceLocation extends Device {
 
 		// Set the private variables for this instance
 		this.device_id = device_id;
-		this.parent_username = parent_username;
 		this.auth_token = auth_token;
 		// this.entry_time = entry_time;
 		this.latitude = latitude;
