@@ -20,7 +20,7 @@ public class DeviceLogin extends Device implements Jsonifiable {
 	// first time
 	public DeviceLogin(String deviceID, String username, String password,
 			String make, String model, double phone_number, String OS,
-			boolean is_child) {
+			boolean is_child, String gcm_token) {
 		super(deviceID);
 		this.device_id = deviceID;
 		if (deviceID.compareTo("") == 0)
@@ -31,6 +31,7 @@ public class DeviceLogin extends Device implements Jsonifiable {
 		this.model = model;
 		this.is_child = is_child;
 		this.OS = OS;
+		this.gcm_token = gcm_token;
 	}
 
 	public boolean login() {
@@ -118,7 +119,7 @@ public class DeviceLogin extends Device implements Jsonifiable {
 	}
 
 	private boolean createDevice() {
-		String sqlString = "INSERT INTO device_details(device_id, parent_username, make, model, OS, is_child) values(?, ?, ?, ?, ?, ?)";
+		String sqlString = "INSERT INTO device_details(device_id, parent_username, make, model, OS, is_child, gcm_token) values(?, ?, ?, ?, ?, ?, ?)";
 
 		LinkedHashMap<String, Object> data = new LinkedHashMap<String, Object>();
 		data.put("deviceID", device_id);
@@ -127,6 +128,7 @@ public class DeviceLogin extends Device implements Jsonifiable {
 		data.put("model", model);
 		data.put("OS", OS);
 		data.put("is_child", is_child);
+		data.put("gcm_token", gcm_token);
 
 		try {
 			if (DatabaseCore.executeSqlUpdate(sqlString, data)) {
