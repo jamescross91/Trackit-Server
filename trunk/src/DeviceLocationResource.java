@@ -41,6 +41,9 @@ public class DeviceLocationResource extends ServerResource {
 		DeviceLocation locInput = new DeviceLocation(deviceId, authToken, lat, lng, provider, altitude, accuracy, bearing, battery, charging, "guff", "3g", speed);
 		locInput.persistLocation();
 		
+		AlertsManager manager = new AlertsManager(locInput);
+		manager.processAlerts();
+		
 		System.out.println("My current latitude is " + lat
 				+ " and longitude is " + lng + "\n");
 

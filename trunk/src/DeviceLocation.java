@@ -1,8 +1,10 @@
 import java.util.LinkedHashMap;
 
 import org.apache.log4j.Logger;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-public class DeviceLocation {
+public class DeviceLocation implements Jsonifiable{
 	private String entry_time;
 	private double latitude;
 	private double longitude;
@@ -134,5 +136,29 @@ public class DeviceLocation {
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	public JSONObject toJson() {
+		JSONObject object = new JSONObject();
+		try {
+			object.put("latitude", latitude);
+			object.put("longitude", longitude);
+			object.put("location_source", location_source);
+			object.put("altitude", altitude);
+			object.put("accuracy", accuracy);
+			object.put("bearing", bearing);
+			object.put("battery", battery);
+			object.put("is_charging", is_charging);
+			object.put("network", network);
+			object.put("data_connection", data_connection);
+			object.put("velocity", velocity);
+		} catch (JSONException e) {
+			logger.error("An exception occured while trying to Jsonify the login result for device id "
+					+ device_id);
+			e.printStackTrace();
+		}
+
+		return object;
 	}
 }
