@@ -44,8 +44,10 @@ public class DeviceLocation extends Device {
 	public boolean persistLocation() {
 		boolean dbSuccess = false;
 
-		if (!validateData() || authenticateDevice())
+		if (!validateData() || !authenticateDevice()){
+			logger.warn("Devices location update was invalid");
 			return false;
+		}
 
 		// TODO Add the date/time the device creates the location instead of
 		// when its inserted into the database
