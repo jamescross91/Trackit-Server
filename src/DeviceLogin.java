@@ -21,14 +21,14 @@ public class DeviceLogin extends Device implements Jsonifiable {
 	public DeviceLogin(String deviceID, String username, String password,
 			String make, String model, double phone_number, String OS,
 			boolean is_child) {
+		super(deviceID);
 		this.device_id = deviceID;
-		if(deviceID.compareTo("") == 0)
+		if (deviceID.compareTo("") == 0)
 			this.device_id = generateToken();
 		this.username = username;
 		this.password = password;
 		this.make = make;
 		this.model = model;
-		this.phone_number = phone_number;
 		this.is_child = is_child;
 		this.OS = OS;
 	}
@@ -48,14 +48,14 @@ public class DeviceLogin extends Device implements Jsonifiable {
 			// Did the device get inserted correctly?
 			if (!createDevice())
 				return false;
-			
-			//Did a new authentication token get created successfully?
+
+			// Did a new authentication token get created successfully?
 			authToken = generateAuth();
-			if(authToken.compareTo("") == 0)
+			if (authToken.compareTo("") == 0)
 				return false;
 		}
 
-		 authToken = getAuth();
+		authToken = getAuth();
 
 		// Was the auth token generated and saved as expected?
 		if (authToken == new String())

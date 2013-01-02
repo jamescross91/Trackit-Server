@@ -2,7 +2,7 @@ import java.util.LinkedHashMap;
 
 import org.apache.log4j.Logger;
 
-public class DeviceLocation extends Device {
+public class DeviceLocation {
 	private String entry_time;
 	private double latitude;
 	private double longitude;
@@ -15,6 +15,8 @@ public class DeviceLocation extends Device {
 	private String network;
 	private String data_connection;
 	private double velocity;
+	protected String device_id;
+	protected String auth_token;
 
 	private static Logger logger = Logger.getLogger(DeviceLocation.class);
 
@@ -44,7 +46,12 @@ public class DeviceLocation extends Device {
 	public boolean persistLocation() {
 		boolean dbSuccess = false;
 
-		if (!validateData() || !authenticateDevice()){
+		//Load the information for this device from the database and attempt to authenticate it against the provided token
+		Device thisDevice = new Device(device_id);
+		if(!thisDevice.loadDevice())
+			return false;
+		
+		if (!validateData() || !thisDevice.authenticateToken(auth_token)){
 			logger.warn("Devices location update was invalid");
 			return false;
 		}
