@@ -20,6 +20,7 @@ public class Device{
 	public String model;
 	public boolean is_child;
 	public String gcm_token;
+	public String OS;
 	
 	private static Logger logger = Logger.getLogger(Device.class);
 
@@ -72,6 +73,7 @@ public class Device{
 		model = (String) thisDevice.get("model");;
 		is_child = (boolean) thisDevice.get("is_child");
 		gcm_token = (String) thisDevice.get("gcm_token");
+		OS = (String) thisDevice.get("OS");
 		
 		return true;
 	}
