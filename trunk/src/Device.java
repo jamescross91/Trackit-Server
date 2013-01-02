@@ -13,18 +13,33 @@ public class Device{
 	// Privs will need to be changed in DatabaseCore. Try mapping from a class
 	// to a username/password - which will in turn be configured in MySQL
 
-	protected String device_id;
-	protected String parent_username;
-	protected String auth_token;
-	protected String make;
-	protected String model;
-	protected double phone_number;
-	protected boolean is_child;
+	public String device_id;
+	public String parent_username;
+	public String auth_token;
+	public String make;
+	public String model;
+	public boolean is_child;
+	public String gcm_token;
 	
 	private static Logger logger = Logger.getLogger(Device.class);
 
-	protected boolean authenticateDevice() {
+	public Device(String device_id){
+		this.device_id = device_id;
+	}
+	
+	protected boolean authenticateToken(String token) {
 
+		if (token.compareTo(auth_token) != 0) {
+			logger.warn("Device "
+					+ device_id
+					+ " is attempting to connect with an invalid authentication token");
+			return false;
+		}
+
+		return true;
+	}
+	
+	public boolean loadDevice(){
 		List<HashMap<String, Object>> result = null;
 
 		String sqlString = "SELECT * FROM device_details WHERE device_id = ?";
@@ -50,20 +65,14 @@ public class Device{
 
 		// Check the username provided against the database
 		HashMap<String, Object> thisDevice = result.get(0);
-
-		String token = (String) thisDevice.get("auth_token");
 		
-		if (token.compareTo(auth_token) != 0) {
-			logger.warn("Device "
-					+ device_id
-					+ " is attempting to connect with an invalid authentication token");
-			return false;
-		}
-
-		return true;
-	}
-	
-	protected boolean loadDevice(){
+		auth_token = (String) thisDevice.get("auth_token");
+		parent_username = (String) thisDevice.get("parent_username");;
+		make = (String) thisDevice.get("make");;
+		model = (String) thisDevice.get("model");;
+		is_child = (boolean) thisDevice.get("is_child");
+		gcm_token = (String) thisDevice.get("gcm_token");
+		
 		return true;
 	}
 }
