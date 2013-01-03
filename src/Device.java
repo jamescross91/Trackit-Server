@@ -68,9 +68,9 @@ public class Device{
 		HashMap<String, Object> thisDevice = result.get(0);
 		
 		auth_token = (String) thisDevice.get("auth_token");
-		parent_username = (String) thisDevice.get("parent_username");;
-		make = (String) thisDevice.get("make");;
-		model = (String) thisDevice.get("model");;
+		parent_username = (String) thisDevice.get("parent_username");
+		make = (String) thisDevice.get("make");
+		model = (String) thisDevice.get("model");
 		is_child = (boolean) thisDevice.get("is_child");
 		gcm_token = (String) thisDevice.get("gcm_token");
 		OS = (String) thisDevice.get("OS");
