@@ -22,11 +22,8 @@ public abstract class PushNotification implements Pushable {
 	public PushNotification(int alertType, String device_id) {
 		this.alertType = alertType;
 		this.device_id = device_id;
-	}
-	
-	public boolean loadDevice(){
 		device = new Device(device_id);
-		return device.loadDevice();
+		device.loadDevice();
 	}
 
 	public void setAlertMessage(String alertMessage) {

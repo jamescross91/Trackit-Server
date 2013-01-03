@@ -61,9 +61,8 @@ public class AlertsManager {
 			// No devices
 		}
 
-		for (Entry<String, Object> entry : data.entrySet()) {
-			HashMap<String, Object> thisEntry = (HashMap<String, Object>) entry
-					.getValue();
+		for (int i = 0; i < result.size(); i++) {
+			HashMap<String, Object> thisEntry = result.get(i); 
 			Device thisDevice = new Device((String) thisEntry.get("device_id"));
 			thisDevice.loadDevice();
 			parentDevices.add(thisDevice);

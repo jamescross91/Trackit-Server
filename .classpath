@@ -14,5 +14,6 @@
 	<classpathentry kind="lib" path="lib/org.restlet.ext.ssl.jar"/>
 	<classpathentry kind="lib" path="lib/org.simpleframework.jar"/>
 	<classpathentry kind="lib" path="lib/gcm-server.jar"/>
+	<classpathentry kind="lib" path="lib/json-simple-1.1.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
