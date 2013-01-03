@@ -30,9 +30,10 @@ public class AndroidPushNotification extends PushNotification implements Pushabl
 	}
 
 	private String pushLocationUpdate() {
+		String messageString = deviceLocation.toJson().toString();
 		Sender sender = new Sender(ReadProperties.getProperty("gcm_key"));
 		Message message = new Message.Builder().addData("message",
-				deviceLocation.toJson().toString()).build();
+				messageString).build();
 
 		Result result;
 		try {
