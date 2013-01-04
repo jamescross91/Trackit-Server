@@ -18,13 +18,12 @@ public class DeviceLogin extends Device implements Jsonifiable {
 
 	// This is the process of a new device connecting to the application for the
 	// first time
-	public DeviceLogin(String deviceID, String username, String password,
+	public DeviceLogin(String username, String password,
 			String make, String model, double phone_number, String OS,
 			boolean is_child, String gcm_token) {
-		super(deviceID);
-		this.device_id = deviceID;
-		if (deviceID.compareTo("") == 0)
-			this.device_id = generateToken();
+		super("");
+		//Generate a random device ID
+		this.device_id = generateToken();
 		this.username = username;
 		this.password = password;
 		this.make = make;
