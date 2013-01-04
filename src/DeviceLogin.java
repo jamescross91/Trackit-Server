@@ -73,6 +73,7 @@ public class DeviceLogin extends Device implements Jsonifiable {
 		try {
 			object.put("loginSuccess", loginSuccess);
 			object.put("authToken", authToken);
+			object.put("device_id", device_id);
 		} catch (JSONException e) {
 			logger.error("An exception occured while trying to Jsonify the login result for device id "
 					+ device_id);
