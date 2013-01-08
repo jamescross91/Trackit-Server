@@ -17,6 +17,7 @@ public class LocationApplication extends Application {
 		router.attach("/child/location", DeviceLocationResource.class);
 		router.attach("/child/login", DeviceLoginResource.class);
 		router.attach("/parent/login", ParentLoginResource.class);
+		router.attach("/parent/geofence/save", GeoFenceSaveResource.class);
 			
 		return router;
 	}
