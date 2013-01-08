@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -160,7 +161,7 @@ public class DatabaseCore {
 					.getProperty("pooltimeout")));
 			if (con != null) {
 
-				statement = con.prepareStatement(statementString);
+				statement = con.prepareStatement(statementString, Statement.RETURN_GENERATED_KEYS);
 
 				// Iterate over the map containing datatype:data. Switch on
 				// datatype and call the relavent function
