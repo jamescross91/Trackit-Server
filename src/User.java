@@ -51,7 +51,7 @@ public class User {
 		
 		String error = new String();
 		HashMap<String, Object> result = new HashMap<String, Object>();
-		boolean dbSuccess = false;
+		long index = -1;
 
 		// Attempt to hash the password. If this fails, catch the exception, log
 		// it, and return the result hashmap to the calling function
@@ -78,7 +78,7 @@ public class User {
 		data.put("emailAddress", emailAddress);
 
 		try {
-			dbSuccess = DatabaseCore.executeSqlUpdate(sqlString, data);
+			index = DatabaseCore.executeSqlUpdate(sqlString, data);
 		} catch (Exception e) {
 			error = "Error adding parent details to the database, username is: "
 					+ userName;
@@ -88,7 +88,7 @@ public class User {
 			e.printStackTrace();
 		}
 
-		result.put("Created", dbSuccess);
+		result.put("Created", index);
 		return result;
 	}
 
