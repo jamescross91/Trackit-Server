@@ -1,3 +1,5 @@
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.restlet.data.Form;
 import org.restlet.ext.json.JsonRepresentation;
 import org.restlet.representation.Representation;
@@ -17,29 +19,39 @@ public class GeoFenceSaveResource extends ServerResource {
 		Representation result = null;
 		Form form = new Form(entity);
 
-		String username = form.getFirstValue("username");
-		String password = form.getFirstValue("password");
-		String make = form.getFirstValue("make");
-		String model = form.getFirstValue("model");
-		String OS = form.getFirstValue("OS");
 		String device_id = form.getFirstValue("device_id");
-		String gcm = form.getFirstValue("gcm_token");
-		double phone_number = Double.parseDouble(form
-				.getFirstValue("phoneNumber"));
-		//
-		// public DeviceLogin(String username, String password, String make,
-		// String model, double phone_number, String OS, boolean is_child) {
-		DeviceLogin newDevice = new DeviceLogin(device_id, username, password, make,
-				model, phone_number, OS, false, gcm);
+		String auth_token = form.getFirstValue("auth_token");
+		double lat = Double.parseDouble(form.getFirstValue("latitude"));
+		double lng = Double.parseDouble(form.getFirstValue("longitude"));
+		double radius = Double.parseDouble(form.getFirstValue("radius"));
 		
-		newDevice.login();
+		Device thisDevice = new Device(device_id);
+		thisDevice.loadDevice();
+		if(thisDevice.authenticateToken(auth_token)){
+			RadialGeofenceHandler handler = new RadialGeofenceHandler();
+			handler.setLat(lat);
+			handler.setLng(lng);
+			handler.setRadius(radius);
+			handler.setParent_username(thisDevice.parent_username);
+			handler.savePoint();
+			
+			result = new JsonRepresentation(handler.toJson());
+		}
+		else
+			result = new JsonRepresentation(getErrorObj());
 		
-		result = new JsonRepresentation(newDevice.toJson());
-		
-		System.out.println("hello");
-
-		// result.
-
 		return (result);
 	}
+	
+	private JSONObject getErrorObj(){
+		JSONObject object = new JSONObject();
+		try {
+			object.put("failure", "Device did not authenticate");
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		
+		return object;
+	}
+	
 }
