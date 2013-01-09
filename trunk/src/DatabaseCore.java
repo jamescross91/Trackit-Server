@@ -144,7 +144,7 @@ public class DatabaseCore {
 		return list;
 	}
 
-	public static boolean executeSqlUpdate(String statementString,
+	public static long executeSqlUpdate(String statementString,
 			LinkedHashMap<String, Object> data) throws Exception {
 		// Attempts to execute an insert statement against the database using a
 		// connection resource extracted from the pool
@@ -152,6 +152,8 @@ public class DatabaseCore {
 		// Faster, cacheable, and helps to prevent SQL injection attacks vs a
 		// normal statement
 		PreparedStatement statement = null;
+		ResultSet rs;
+		long key = -1;
 
 		if (pool == null)
 			connect();
@@ -197,20 +199,25 @@ public class DatabaseCore {
 
 				logger.info("Executing: " + statement.toString());
 				statement.executeUpdate();
+				rs = statement.getGeneratedKeys();
+				if(rs != null && rs.next()){
+					key = rs.getLong(1);				
+				}
+	
 			} else {
 				logger.error("Critial error: unable to get access to the database because the pool was saturated with requests!");
-				return false;
+				return key;
 			}
 		} catch (SQLException e) {
 			logger.error("Error inserting data into the database, failed with: "
 					+ e.getMessage());
-			return false;
+			return key;
 		} finally {
 			// Do this in a finally block so we release the resource even if
 			// there is an exception!
 			statement.close();
 			con.close();
-		}
-		return true;
+		}	
+		return key;
 	}
 }

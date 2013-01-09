@@ -46,7 +46,7 @@ public class DeviceLocation implements Jsonifiable{
 	}
 
 	public boolean persistLocation() {
-		boolean dbSuccess = false;
+		long index = -1;
 
 		//Load the information for this device from the database and attempt to authenticate it against the provided token
 		Device thisDevice = new Device(device_id);
@@ -79,7 +79,7 @@ public class DeviceLocation implements Jsonifiable{
 		data.put("velocity", velocity);
 
 		try {
-			dbSuccess = DatabaseCore.executeSqlUpdate(sqlString, data);
+			index = DatabaseCore.executeSqlUpdate(sqlString, data);
 		} catch (Exception e) {
 
 			logger.error("Error inserting location update into the database for device id: "
@@ -87,7 +87,7 @@ public class DeviceLocation implements Jsonifiable{
 			e.printStackTrace();
 		}
 
-		if (!dbSuccess) {
+		if (index != -1) {
 			logger.error("Error inserting location update into the database for device id: "
 					+ device_id);
 		}
