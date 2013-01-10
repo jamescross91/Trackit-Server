@@ -15,7 +15,7 @@ public class GeoFenceSaveResource extends ServerResource {
 
 	@Post
 	public Representation acceptItem(Representation entity) {
-		System.out.println("Device attempting to log in");
+		System.out.println("Device attempting to save geomarker");
 		Representation result = null;
 		Form form = new Form(entity);
 
@@ -24,11 +24,12 @@ public class GeoFenceSaveResource extends ServerResource {
 		double lat = Double.parseDouble(form.getFirstValue("latitude"));
 		double lng = Double.parseDouble(form.getFirstValue("longitude"));
 		double radius = Double.parseDouble(form.getFirstValue("radius"));
+		long marker_id = Long.parseLong(form.getFirstValue("marker_id"));
 		
 		Device thisDevice = new Device(device_id);
 		thisDevice.loadDevice();
 		if(thisDevice.authenticateToken(auth_token)){
-			RadialGeofenceHandler handler = new RadialGeofenceHandler();
+			RadialGeofenceHandler handler = new RadialGeofenceHandler(marker_id);
 			handler.setLat(lat);
 			handler.setLng(lng);
 			handler.setRadius(radius);

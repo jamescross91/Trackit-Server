@@ -12,11 +12,13 @@ public class RadialGeofenceHandler implements Jsonifiable {
 	private double lat;
 	private double lng;
 	private double radius;
+	public static final long NEVER_SAVED = -1;
 
 	private static Logger logger = Logger
 			.getLogger(RadialGeofenceHandler.class);
 
-	public RadialGeofenceHandler() {
+	public RadialGeofenceHandler(long marker_id) {
+		this.marker_id = marker_id;
 	}
 
 	public boolean loadPoint() {
@@ -24,7 +26,7 @@ public class RadialGeofenceHandler implements Jsonifiable {
 
 		String sqlString = "SELECT * FROM radial_geofences WHERE marker_id = ?";
 		LinkedHashMap<String, Object> data = new LinkedHashMap<String, Object>();
-		data.put("marker_id", marker_id);
+		data.put("marker_id", (int) marker_id);
 
 		try {
 			result = DatabaseCore.executeSqlQuery(sqlString, data);
@@ -55,32 +57,48 @@ public class RadialGeofenceHandler implements Jsonifiable {
 	}
 
 	public long savePoint() {
-
-		String sqlString = "INSERT INTO radial_geofences (parent_username, latitude, longitude, radius) VALUES(?, ?, ?, ?)";
 		LinkedHashMap<String, Object> data = new LinkedHashMap<String, Object>();
-		data.put("parent_username", parent_username);
-		data.put("lat", lat);
-		data.put("lng", lng);
-		data.put("radius", radius);
-
 		long key = -1;
+		
+		if(marker_id == NEVER_SAVED){
+			String sqlString = "INSERT INTO radial_geofences (parent_username, latitude, longitude, radius) VALUES(?, ?, ?, ?)";
+			
+			data.put("parent_username", parent_username);
+			data.put("lat", lat);
+			data.put("lng", lng);
+			data.put("radius", radius);
+			try {
+				key = DatabaseCore.executeSqlUpdate(sqlString, data);
+			} catch (Exception e) {
 
-		try {
-			key = DatabaseCore.executeSqlUpdate(sqlString, data);
-		} catch (Exception e) {
+				logger.error("Error inserting radial geofence into the database for username: "
+						+ parent_username);
+				e.printStackTrace();
+			}
 
-			logger.error("Error inserting radial geofence into the database for username: "
-					+ parent_username);
-			e.printStackTrace();
+			if (key == -1) {
+				logger.error("Error inserting radial geofence into the database for username: "
+						+ parent_username);
+			}
+
+			marker_id = key;
 		}
+		
+		else{
+			String sqlString = "UPDATE radial_geofences SET latitude=?, longitude=?, radius=? WHERE marker_id = ?";
+			data.put("latitude", lat);
+			data.put("longitude", lng);
+			data.put("radius", radius);
+			data.put("marker_id", (int)marker_id);
 
-		if (key != -1) {
-			logger.error("Error inserting radial geofence into the database for username: "
-					+ parent_username);
+			try {
+				key = DatabaseCore.executeSqlUpdate(sqlString, data);
+			} catch (Exception e) {
+				logger.error("Unable to update radial geofence for marker id "
+						+ marker_id);
+				e.printStackTrace();
+			}
 		}
-
-		marker_id = key;
-
 		return key;
 	}
 
