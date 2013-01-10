@@ -114,6 +114,10 @@ public class DatabaseCore {
 						statement.setInt(index, (Integer) entry.getValue());
 						break;
 					}
+					case "java.lang.Integer": {
+						statement.setInt(index, (Integer) entry.getValue());
+						break;
+					}
 					default: {
 						logger.error("Unable to map datatype: " + datatype
 								+ " to a prepared statement function");
