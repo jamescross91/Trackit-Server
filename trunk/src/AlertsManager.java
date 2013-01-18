@@ -10,12 +10,14 @@ public class AlertsManager {
 	private DeviceLocation deviceLocation;
 	private Device sourceDevice;
 	private ArrayList<Device> parentDevices = new ArrayList<Device>();
+	private ArrayList<RadialGeofenceHandler> points = new ArrayList<RadialGeofenceHandler>();
 	private static Logger logger = Logger.getLogger(AlertsManager.class);
 
 	public AlertsManager(DeviceLocation deviceLocation) {
 		this.deviceLocation = deviceLocation;
 		sourceDevice = new Device(deviceLocation.device_id);
 		sourceDevice.loadDevice();
+		loadPoints();
 	}
 
 	public boolean processAlerts() {
@@ -31,15 +33,54 @@ public class AlertsManager {
 	private void processAlerts(Device parentDevice) {
 		switch (parentDevice.OS) {
 		case "Android":
-			sendAndroidAlert(parentDevice);
+			sendAndroidLocAlert(parentDevice);
+			sendAndroidGeoAlerts(parentDevice);
 			break;
 		}
 	}
 
-	private void sendAndroidAlert(Device parentDevice) {
+	private void sendAndroidLocAlert(Device parentDevice) {
 		AndroidPushNotification notif = new AndroidPushNotification(AndroidPushNotification.LOCATION_UPDATE, parentDevice.device_id);
 		notif.setDeviceLocation(deviceLocation);
 		notif.pushMessage();
+	}
+	
+	private void sendAndroidGeoAlerts(Device parentDevice){
+		for(int i = 0; i < points.size(); i++){
+			RadialGeofenceHandler point = points.get(i);
+			String alertString = point.requiresAlert(deviceLocation, sourceDevice);
+			if(alertString.compareTo(null) != 0){
+				AndroidPushNotification notif = new AndroidPushNotification(AndroidPushNotification.GEOFENCE_CROSS, parentDevice.device_id);
+				
+				notif.pushMessage();
+			}
+		}
+	}
+	
+	private void loadPoints() {
+
+		//Load all GeoFences for this parent from the database 
+		List<HashMap<String, Object>> result = null;
+
+		String sqlString = "SELECT marker_id FROM radial_geofences WHERE parent_username = ?";
+		LinkedHashMap<String, Object> data = new LinkedHashMap<String, Object>();
+		data.put("parent_username", sourceDevice.parent_username);
+
+		try {
+			result = DatabaseCore.executeSqlQuery(sqlString, data);
+		} catch (Exception e) {
+			logger.error("Error extracting geofence from the database");
+			e.printStackTrace();
+		}
+
+		for (int i = 0; i < result.size(); i++) {
+			HashMap<String, Object> thisMarker = result.get(i);
+
+			RadialGeofenceHandler marker = new RadialGeofenceHandler(
+					Long.valueOf((int) thisMarker.get("marker_id")));
+			marker.loadPoint();
+			points.add(marker);
+		}
 	}
 
 	@SuppressWarnings({ "unchecked", "unused" })
