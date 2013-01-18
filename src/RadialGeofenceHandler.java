@@ -12,7 +12,9 @@ public class RadialGeofenceHandler implements Jsonifiable {
 	private double lat;
 	private double lng;
 	private double radius;
+	private boolean loaded = false;
 	public static final long NEVER_SAVED = -1;
+	public static final int EARTH_RADIUS = 6371;
 
 	private static Logger logger = Logger
 			.getLogger(RadialGeofenceHandler.class);
@@ -53,15 +55,17 @@ public class RadialGeofenceHandler implements Jsonifiable {
 		setLng((Double) thisMarker.get("longitude"));
 		setRadius((Double) thisMarker.get("radius"));
 
+		loaded = true;
+
 		return true;
 	}
-	
-	public boolean deletePoint(){
+
+	public boolean deletePoint() {
 		LinkedHashMap<String, Object> data = new LinkedHashMap<String, Object>();
 		String sqlString = "DELETE FROM radial_geofences WHERE marker_id = ?";
-		
-		data.put("marker_id", (int)marker_id);
-		
+
+		data.put("marker_id", (int) marker_id);
+
 		try {
 			DatabaseCore.executeSqlUpdate(sqlString, data);
 		} catch (Exception e) {
@@ -70,17 +74,217 @@ public class RadialGeofenceHandler implements Jsonifiable {
 			e.printStackTrace();
 			return false;
 		}
-		
+
 		return true;
+	}
+
+	// This is perhaps the most important function of the entire application -
+	// works out if we need to alert
+	public String requiresAlert(DeviceLocation location, Device device) {
+		String alertString;
+
+		if (!loaded)
+			loadPoint();
+
+		if (pointDetailsExist(device)) {
+			// Details already exists for this device and marker
+			// Check if we are inside or outside of the geofence
+			if (existsInRadius(location)) {
+				// We are inside the geofence
+				// Check if we were inside it or outside it before
+				if (getIsInside(device))
+					// But we were already inside it before
+					return null;
+				else {
+					// We were outside it before
+					alertString = "The device: " + device.model
+							+ " has now moved inside your Geofence";
+
+					// Update the database accordingly
+					updateMarkerDetails(device, false, true);
+
+					return alertString;
+				}
+			}
+
+			else {
+				// Details exist for this device and marker, but we are outside
+				// the geofence
+				if (getIsInside(device)) {
+					// But we were inside it before
+					alertString = "The device: " + device.model
+							+ " has now moved outside of your Geofence";
+
+					// Update the database accordingly
+					updateMarkerDetails(device, false, false);
+
+					return alertString;
+				}
+
+				else {
+					//We were already outside it before!
+					return null;
+				}
+			}
+
+		} else {
+			// This is the first check for this device and marker
+
+			// Are we inside the defined radius?
+			if (existsInRadius(location)) {
+				// If yes and there were no previous details for this device and
+				// marker, assume we were outside the radius before
+
+				// Update the database accordingly
+				updateMarkerDetails(device, true, true);
+
+				alertString = "The device: " + device.model
+						+ " has now moved inside your Geofence";
+
+				return alertString;
+
+			} else {
+				// There are no details for the marker/device, and we are
+				// outside the circle so set this in the database
+				updateMarkerDetails(device, true, false);
+
+				// No alert is required
+				return null;
+			}
+
+		}
+	}
+
+	private boolean existsInRadius(DeviceLocation location) {
+		// Uses the Haversine formula
+		double sourceLat = location.getLatitude();
+		double sourceLng = location.getLongitude();
+
+		double dLat = degreesToRadians((sourceLat - lat));
+		double dLng = degreesToRadians((sourceLng - lng));
+
+		double a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
+				+ Math.cos(degreesToRadians(lat))
+				* Math.cos(degreesToRadians(sourceLat)) * Math.sin(dLng / 2)
+				* Math.sin(dLng / 2);
+
+		double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+		double d = EARTH_RADIUS * c; // The distance in Km
+
+		// Ensure its a positive
+		d = Math.abs(d);
+
+		if (d > radius)
+			return false;
+
+		// We are inside the circle...how exciting!
+		if (d < radius)
+			return true;
+
+		return false;
+	}
+
+	private boolean getIsInside(Device device) {
+		LinkedHashMap<String, Object> data = new LinkedHashMap<String, Object>();
+		List<HashMap<String, Object>> result = null;
+
+		String sqlString = "SELECT * FROM radial_details WHERE device_id = ? AND marker_id = ?";
+
+		data.put("device_id", device.device_id);
+		data.put("marker_id", (int) marker_id);
+		try {
+			result = DatabaseCore.executeSqlQuery(sqlString, data);
+
+		} catch (Exception e) {
+			logger.error("Error extracting radial geofence details for marker: "
+					+ marker_id);
+			e.printStackTrace();
+		}
+
+		if (result.size() != 1) {
+			logger.error("Error attempting to extract radial details for marker_id "
+					+ marker_id
+					+ " the incorrect number of results was returned!");
+			return false;
+		}
+
+		HashMap<String, Object> thisMarker = result.get(0);
+		return (boolean) thisMarker.get("is_inside");
+	}
+
+	private boolean updateMarkerDetails(Device device, boolean initialInsert,
+			boolean is_inside) {
+		LinkedHashMap<String, Object> data = new LinkedHashMap<String, Object>();
+		long key = -1;
+		String sqlString;
+
+		if (initialInsert) {
+			sqlString = "INSERT INTO radial_details (device_id, marker_id, is_inside) VALUES(?, ?, ?)";
+			data.put("device_id", device.device_id);
+			data.put("marker_id", marker_id);
+			data.put("is_inside", is_inside);
+		} else {
+			sqlString = "UPDATE radial_details SET is_inside = ? WHERE marker_id = ? AND device_id = ?";
+			data.put("is_inside", is_inside);
+			data.put("marker_id", marker_id);
+			data.put("device_id", device.device_id);
+		}
+
+		try {
+			key = DatabaseCore.executeSqlUpdate(sqlString, data);
+		} catch (Exception e) {
+			logger.error("Error inserting radial geofence into the database for username: "
+					+ parent_username);
+			e.printStackTrace();
+			return false;
+		}
+
+		if (key == -1) {
+			logger.error("Error inserting radial geofence into the database for username: "
+					+ parent_username);
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	private double degreesToRadians(double degrees) {
+		return degrees * (Math.PI / 180);
+	}
+
+	private boolean pointDetailsExist(Device device) {
+
+		LinkedHashMap<String, Object> data = new LinkedHashMap<String, Object>();
+		List<HashMap<String, Object>> result;
+
+		if (marker_id == NEVER_SAVED) {
+			String sqlString = "SELECT * FROM radial_details WHERE device_id = ? AND marker_id = ?";
+
+			data.put("device_id", device.device_id);
+			data.put("marker_id", (int) marker_id);
+			try {
+				result = DatabaseCore.executeSqlQuery(sqlString, data);
+				if (result.size() > 0)
+					return true;
+				else
+					return false;
+			} catch (Exception e) {
+				logger.error("Error inserting radial geofence into the database for username: "
+						+ parent_username);
+				e.printStackTrace();
+			}
+		}
+
+		return false;
 	}
 
 	public long savePoint() {
 		LinkedHashMap<String, Object> data = new LinkedHashMap<String, Object>();
 		long key = -1;
-		
-		if(marker_id == NEVER_SAVED){
+
+		if (marker_id == NEVER_SAVED) {
 			String sqlString = "INSERT INTO radial_geofences (parent_username, latitude, longitude, radius) VALUES(?, ?, ?, ?)";
-			
+
 			data.put("parent_username", parent_username);
 			data.put("lat", lat);
 			data.put("lng", lng);
@@ -100,13 +304,13 @@ public class RadialGeofenceHandler implements Jsonifiable {
 
 			marker_id = key;
 		}
-		
-		else{
+
+		else {
 			String sqlString = "UPDATE radial_geofences SET latitude=?, longitude=?, radius=? WHERE marker_id = ?";
 			data.put("latitude", lat);
 			data.put("longitude", lng);
 			data.put("radius", radius);
-			data.put("marker_id", (int)marker_id);
+			data.put("marker_id", (int) marker_id);
 
 			try {
 				key = DatabaseCore.executeSqlUpdate(sqlString, data);

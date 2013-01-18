@@ -48,6 +48,19 @@ public class AndroidPushNotification extends PushNotification implements Pushabl
 	}
 
 	private String pushGeofenceCross() {
-		return "";
+		Sender sender = new Sender(ReadProperties.getProperty("gcm_key"));
+		Message message = new Message.Builder().addData("message",
+				alertMessage).build();
+
+		Result result;
+		try {
+			result = sender.send(message, device.gcm_token, 1);
+			return result.toString();
+		} catch (IOException e) {
+			logger.error("Data alert push failed with exception "
+					+ e.toString());
+		}
+
+		return null;
 	}
 }
