@@ -6,10 +6,15 @@ import com.google.android.gcm.server.Message;
 import com.google.android.gcm.server.Result;
 import com.google.android.gcm.server.Sender;
 
-public class AndroidPushNotification extends PushNotification implements Pushable {
-	
-	private static Logger logger = Logger.getLogger(AndroidPushNotification.class);
-	
+public class AndroidPushNotification extends PushNotification implements
+		Pushable {
+
+	public static final String LOCATION_UPDATE_KEY = "Loc";
+	public static final String GEOFENCE_CROSS_KEY = "Geo";
+
+	private static Logger logger = Logger
+			.getLogger(AndroidPushNotification.class);
+
 	public AndroidPushNotification(int alertType, String device_id) {
 		super(alertType, device_id);
 	}
@@ -32,7 +37,7 @@ public class AndroidPushNotification extends PushNotification implements Pushabl
 	private String pushLocationUpdate() {
 		String messageString = deviceLocation.toJson().toString();
 		Sender sender = new Sender(ReadProperties.getProperty("gcm_key"));
-		Message message = new Message.Builder().addData("message",
+		Message message = new Message.Builder().addData(LOCATION_UPDATE_KEY,
 				messageString).build();
 
 		Result result;
@@ -49,7 +54,7 @@ public class AndroidPushNotification extends PushNotification implements Pushabl
 
 	private String pushGeofenceCross() {
 		Sender sender = new Sender(ReadProperties.getProperty("gcm_key"));
-		Message message = new Message.Builder().addData("message",
+		Message message = new Message.Builder().addData(GEOFENCE_CROSS_KEY,
 				alertMessage).build();
 
 		Result result;

@@ -14,7 +14,7 @@ public class RadialGeofenceHandler implements Jsonifiable {
 	private double radius;
 	private boolean loaded = false;
 	public static final long NEVER_SAVED = -1;
-	public static final int EARTH_RADIUS = 6371;
+	public static final int EARTH_RADIUS = 6371000; // Earth radius in M
 
 	private static Logger logger = Logger
 			.getLogger(RadialGeofenceHandler.class);
@@ -82,7 +82,7 @@ public class RadialGeofenceHandler implements Jsonifiable {
 	// works out if we need to alert
 	public String requiresAlert(DeviceLocation location, Device device) {
 		String alertString;
-
+		logger.info("Checking device: " + device.model + " against current radial geofence");
 		if (!loaded)
 			loadPoint();
 
@@ -92,9 +92,11 @@ public class RadialGeofenceHandler implements Jsonifiable {
 			if (existsInRadius(location)) {
 				// We are inside the geofence
 				// Check if we were inside it or outside it before
-				if (getIsInside(device))
+				if (getIsInside(device)){
 					// But we were already inside it before
+					logger.info("Device already inside the geofence, no change");
 					return null;
+				}
 				else {
 					// We were outside it before
 					alertString = "The device: " + device.model
@@ -102,7 +104,7 @@ public class RadialGeofenceHandler implements Jsonifiable {
 
 					// Update the database accordingly
 					updateMarkerDetails(device, false, true);
-
+					logger.info("Device has moved inside the geofence");
 					return alertString;
 				}
 			}
@@ -116,6 +118,7 @@ public class RadialGeofenceHandler implements Jsonifiable {
 							+ " has now moved outside of your Geofence";
 
 					// Update the database accordingly
+					logger.info("Device has moved outside the geofence");
 					updateMarkerDetails(device, false, false);
 
 					return alertString;
@@ -123,6 +126,7 @@ public class RadialGeofenceHandler implements Jsonifiable {
 
 				else {
 					//We were already outside it before!
+					logger.info("Device already outside the geofence, no change");
 					return null;
 				}
 			}
@@ -140,14 +144,14 @@ public class RadialGeofenceHandler implements Jsonifiable {
 
 				alertString = "The device: " + device.model
 						+ " has now moved inside your Geofence";
-
+				logger.info("Device has moved inside the geofence");
 				return alertString;
 
 			} else {
 				// There are no details for the marker/device, and we are
 				// outside the circle so set this in the database
 				updateMarkerDetails(device, true, false);
-
+				logger.info("Device already outside the geofence, no change");
 				// No alert is required
 				return null;
 			}
