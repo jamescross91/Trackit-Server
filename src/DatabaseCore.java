@@ -121,15 +121,17 @@ public class DatabaseCore {
 					default: {
 						logger.error("Unable to map datatype: " + datatype
 								+ " to a prepared statement function");
-					}
-						index++;
+						break;
 					}
 
-					logger.info("Executing: " + statement.toString());
-					result = statement.executeQuery();
-
-					list = extractData(result);
+					}
+					index++;
 				}
+
+				logger.info("Executing: " + statement.toString());
+				result = statement.executeQuery();
+
+				list = extractData(result);
 			} else {
 				logger.error("Critial error: unable to get access to the database because the pool was saturated with requests!");
 			}
@@ -167,7 +169,8 @@ public class DatabaseCore {
 					.getProperty("pooltimeout")));
 			if (con != null) {
 
-				statement = con.prepareStatement(statementString, Statement.RETURN_GENERATED_KEYS);
+				statement = con.prepareStatement(statementString,
+						Statement.RETURN_GENERATED_KEYS);
 
 				// Iterate over the map containing datatype:data. Switch on
 				// datatype and call the relavent function
@@ -196,6 +199,7 @@ public class DatabaseCore {
 					default: {
 						logger.error("Unable to map datatype: " + datatype
 								+ " to a prepared statement function");
+						break;
 					}
 					}
 					index++;
@@ -204,10 +208,10 @@ public class DatabaseCore {
 				logger.info("Executing: " + statement.toString());
 				statement.executeUpdate();
 				rs = statement.getGeneratedKeys();
-				if(rs != null && rs.next()){
-					key = rs.getLong(1);				
+				if (rs != null && rs.next()) {
+					key = rs.getLong(1);
 				}
-	
+
 			} else {
 				logger.error("Critial error: unable to get access to the database because the pool was saturated with requests!");
 				return key;
@@ -221,7 +225,7 @@ public class DatabaseCore {
 			// there is an exception!
 			statement.close();
 			con.close();
-		}	
+		}
 		return key;
 	}
 }
