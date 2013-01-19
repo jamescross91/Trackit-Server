@@ -49,9 +49,9 @@ public class AlertsManager {
 		for(int i = 0; i < points.size(); i++){
 			RadialGeofenceHandler point = points.get(i);
 			String alertString = point.requiresAlert(deviceLocation, sourceDevice);
-			if(alertString.compareTo(null) != 0){
+			if(alertString != null){
 				AndroidPushNotification notif = new AndroidPushNotification(AndroidPushNotification.GEOFENCE_CROSS, parentDevice.device_id);
-				
+				notif.setAlertMessage(alertString);
 				notif.pushMessage();
 			}
 		}
