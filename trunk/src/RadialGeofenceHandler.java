@@ -82,7 +82,8 @@ public class RadialGeofenceHandler implements Jsonifiable {
 	// works out if we need to alert
 	public String requiresAlert(DeviceLocation location, Device device) {
 		String alertString;
-		logger.info("Checking device: " + device.model + " against current radial geofence");
+		logger.info("Checking device: " + device.model
+				+ " against current radial geofence");
 		if (!loaded)
 			loadPoint();
 
@@ -92,14 +93,13 @@ public class RadialGeofenceHandler implements Jsonifiable {
 			if (existsInRadius(location)) {
 				// We are inside the geofence
 				// Check if we were inside it or outside it before
-				if (getIsInside(device)){
+				if (getIsInside(device)) {
 					// But we were already inside it before
 					logger.info("Device already inside the geofence, no change");
 					return null;
-				}
-				else {
+				} else {
 					// We were outside it before
-					alertString = "The device: " + device.model
+					alertString = device.model
 							+ " has now moved inside your Geofence";
 
 					// Update the database accordingly
@@ -114,7 +114,7 @@ public class RadialGeofenceHandler implements Jsonifiable {
 				// the geofence
 				if (getIsInside(device)) {
 					// But we were inside it before
-					alertString = "The device: " + device.model
+					alertString = device.model
 							+ " has now moved outside of your Geofence";
 
 					// Update the database accordingly
@@ -125,7 +125,7 @@ public class RadialGeofenceHandler implements Jsonifiable {
 				}
 
 				else {
-					//We were already outside it before!
+					// We were already outside it before!
 					logger.info("Device already outside the geofence, no change");
 					return null;
 				}
@@ -142,7 +142,7 @@ public class RadialGeofenceHandler implements Jsonifiable {
 				// Update the database accordingly
 				updateMarkerDetails(device, true, true);
 
-				alertString = "The device: " + device.model
+				alertString = device.model
 						+ " has now moved inside your Geofence";
 				logger.info("Device has moved inside the geofence");
 				return alertString;
@@ -225,12 +225,12 @@ public class RadialGeofenceHandler implements Jsonifiable {
 		if (initialInsert) {
 			sqlString = "INSERT INTO radial_details (device_id, marker_id, is_inside) VALUES(?, ?, ?)";
 			data.put("device_id", device.device_id);
-			data.put("marker_id", marker_id);
+			data.put("marker_id", (int) marker_id);
 			data.put("is_inside", is_inside);
 		} else {
 			sqlString = "UPDATE radial_details SET is_inside = ? WHERE marker_id = ? AND device_id = ?";
 			data.put("is_inside", is_inside);
-			data.put("marker_id", marker_id);
+			data.put("marker_id", (int) marker_id);
 			data.put("device_id", device.device_id);
 		}
 
@@ -242,14 +242,7 @@ public class RadialGeofenceHandler implements Jsonifiable {
 			e.printStackTrace();
 			return false;
 		}
-
-		if (key == -1) {
-			logger.error("Error inserting radial geofence into the database for username: "
-					+ parent_username);
-			return false;
-		} else {
-			return true;
-		}
+		return true;
 	}
 
 	private double degreesToRadians(double degrees) {
@@ -261,7 +254,7 @@ public class RadialGeofenceHandler implements Jsonifiable {
 		LinkedHashMap<String, Object> data = new LinkedHashMap<String, Object>();
 		List<HashMap<String, Object>> result;
 
-		if (marker_id == NEVER_SAVED) {
+		if (marker_id != NEVER_SAVED) {
 			String sqlString = "SELECT * FROM radial_details WHERE device_id = ? AND marker_id = ?";
 
 			data.put("device_id", device.device_id);

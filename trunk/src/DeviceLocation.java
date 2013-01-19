@@ -87,7 +87,7 @@ public class DeviceLocation implements Jsonifiable{
 			e.printStackTrace();
 		}
 
-		if (index != -1) {
+		if (index == -1) {
 			logger.error("Error inserting location update into the database for device id: "
 					+ device_id);
 		}
