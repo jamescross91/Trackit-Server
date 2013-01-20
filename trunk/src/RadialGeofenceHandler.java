@@ -63,11 +63,13 @@ public class RadialGeofenceHandler implements Jsonifiable {
 	public boolean deletePoint() {
 		LinkedHashMap<String, Object> data = new LinkedHashMap<String, Object>();
 		String sqlString = "DELETE FROM radial_geofences WHERE marker_id = ?";
+		String sqlString2 = "DELETE FROM radial_details WHERE marker_id = ?";
 
 		data.put("marker_id", (int) marker_id);
 
 		try {
 			DatabaseCore.executeSqlUpdate(sqlString, data);
+			DatabaseCore.executeSqlUpdate(sqlString2, data);
 		} catch (Exception e) {
 			logger.error("Error inserting radial geofence into the database for username: "
 					+ parent_username);
