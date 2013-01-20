@@ -12,10 +12,17 @@ public class AlertsManager {
 	private ArrayList<Device> parentDevices = new ArrayList<Device>();
 	private ArrayList<RadialGeofenceHandler> points = new ArrayList<RadialGeofenceHandler>();
 	private static Logger logger = Logger.getLogger(AlertsManager.class);
-
-	public AlertsManager(DeviceLocation deviceLocation) {
+	private long marker_id;
+	
+	public void setLocation(DeviceLocation deviceLocation){
 		this.deviceLocation = deviceLocation;
 		sourceDevice = new Device(deviceLocation.device_id);
+		sourceDevice.loadDevice();
+		loadPoints();
+	}
+	
+	public void setDevice(String device_id){
+		sourceDevice = new Device(device_id);
 		sourceDevice.loadDevice();
 		loadPoints();
 	}
@@ -30,6 +37,28 @@ public class AlertsManager {
 		return true;
 	}
 
+	public boolean processGeofenceUpdates() {
+		loadParents();
+
+		// Ignore the parent issuing the update they dont need to get the alert!
+		for (int i = 0; i < parentDevices.size(); i++) {
+			if (parentDevices.get(i).device_id
+					.compareTo(sourceDevice.device_id) != 0) {
+				processGeoChange(parentDevices.get(i));
+			}
+		}
+
+		return true;
+	}
+
+	private void processGeoChange(Device parentDevice) {
+		switch (parentDevice.OS) {
+		case "Android":
+			sendGeoChangeAlert(parentDevice);
+			break;
+		}
+	}
+
 	private void processAlerts(Device parentDevice) {
 		switch (parentDevice.OS) {
 		case "Android":
@@ -39,27 +68,38 @@ public class AlertsManager {
 		}
 	}
 
+	private void sendGeoChangeAlert(Device parentDevice) {
+		AndroidPushNotification notif = new AndroidPushNotification(
+				AndroidPushNotification.MARKER_UPDATE, parentDevice.device_id);
+		notif.setmarker_id(marker_id);
+		notif.pushMessage();
+	}
+
 	private void sendAndroidLocAlert(Device parentDevice) {
-		AndroidPushNotification notif = new AndroidPushNotification(AndroidPushNotification.LOCATION_UPDATE, parentDevice.device_id);
+		AndroidPushNotification notif = new AndroidPushNotification(
+				AndroidPushNotification.LOCATION_UPDATE, parentDevice.device_id);
 		notif.setDeviceLocation(deviceLocation);
 		notif.pushMessage();
 	}
-	
-	private void sendAndroidGeoAlerts(Device parentDevice){
-		for(int i = 0; i < points.size(); i++){
+
+	private void sendAndroidGeoAlerts(Device parentDevice) {
+		for (int i = 0; i < points.size(); i++) {
 			RadialGeofenceHandler point = points.get(i);
-			String alertString = point.requiresAlert(deviceLocation, sourceDevice);
-			if(alertString != null){
-				AndroidPushNotification notif = new AndroidPushNotification(AndroidPushNotification.GEOFENCE_CROSS, parentDevice.device_id);
+			String alertString = point.requiresAlert(deviceLocation,
+					sourceDevice);
+			if (alertString != null) {
+				AndroidPushNotification notif = new AndroidPushNotification(
+						AndroidPushNotification.GEOFENCE_CROSS,
+						parentDevice.device_id);
 				notif.setAlertMessage(alertString);
 				notif.pushMessage();
 			}
 		}
 	}
-	
+
 	private void loadPoints() {
 
-		//Load all GeoFences for this parent from the database 
+		// Load all GeoFences for this parent from the database
 		List<HashMap<String, Object>> result = null;
 
 		String sqlString = "SELECT marker_id FROM radial_geofences WHERE parent_username = ?";
@@ -103,10 +143,18 @@ public class AlertsManager {
 		}
 
 		for (int i = 0; i < result.size(); i++) {
-			HashMap<String, Object> thisEntry = result.get(i); 
+			HashMap<String, Object> thisEntry = result.get(i);
 			Device thisDevice = new Device((String) thisEntry.get("device_id"));
 			thisDevice.loadDevice();
 			parentDevices.add(thisDevice);
 		}
+	}
+
+	public long getMarker_id() {
+		return marker_id;
+	}
+
+	public void setMarker_id(long marker_id) {
+		this.marker_id = marker_id;
 	}
 }

@@ -11,6 +11,8 @@ public class AndroidPushNotification extends PushNotification implements
 
 	public static final String LOCATION_UPDATE_KEY = "Loc";
 	public static final String GEOFENCE_CROSS_KEY = "Geo";
+	public static final String MARKER_RELOAD_KEY = "Marker";
+
 
 	private static Logger logger = Logger
 			.getLogger(AndroidPushNotification.class);
@@ -30,8 +32,28 @@ public class AndroidPushNotification extends PushNotification implements
 		case GEOFENCE_CROSS:
 			resultString = pushGeofenceCross();
 			break;
+		case MARKER_UPDATE:
+			resultString = pushGeofenceUpdate();
+			break;
 		}
 		return resultString;
+	}
+	
+	private String pushGeofenceUpdate(){
+		Sender sender = new Sender(ReadProperties.getProperty("gcm_key"));
+		Message message = new Message.Builder().addData(MARKER_RELOAD_KEY,
+				String.valueOf(marker_id)).build();
+
+		Result result;
+		try {
+			result = sender.send(message, device.gcm_token, 1);
+			return result.toString();
+		} catch (IOException e) {
+			logger.error("Data alert push failed with exception "
+					+ e.toString());
+		}
+
+		return null;
 	}
 
 	private String pushLocationUpdate() {
