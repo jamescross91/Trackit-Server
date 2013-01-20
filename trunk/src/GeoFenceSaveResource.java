@@ -36,6 +36,11 @@ public class GeoFenceSaveResource extends ServerResource {
 			handler.setParent_username(thisDevice.parent_username);
 			handler.savePoint();
 			
+			AlertsManager manager = new AlertsManager();
+			manager.setDevice(device_id);
+			manager.setMarker_id(marker_id);
+			manager.processGeofenceUpdates();
+			
 			result = new JsonRepresentation(handler.toJson());
 		}
 		else

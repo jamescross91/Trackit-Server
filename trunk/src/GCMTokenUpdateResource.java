@@ -32,7 +32,7 @@ public class GCMTokenUpdateResource extends ServerResource {
 			LinkedHashMap<String, Object> data = new LinkedHashMap<String, Object>();
 			String sqlString;
 
-				sqlString = "UPDATE device_details SET gcm_token = ? WHERE device_id = ??";
+				sqlString = "UPDATE device_details SET gcm_token = ? WHERE device_id = ?";
 				data.put("gcm_token", gcm);
 				data.put("device_id", device_id);
 			try {
