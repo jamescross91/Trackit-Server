@@ -24,10 +24,10 @@ public class DeviceLocation implements Jsonifiable{
 
 	private static Logger logger = Logger.getLogger(DeviceLocation.class);
 
-	//Overload the constructor 
+	//Overload the constructer
 	public DeviceLocation(){
 	}
-	
+
 	public DeviceLocation(String device_id,
 			String auth_token, double latitude, double longitude,
 			String location_source, double altitude, double accuracy,
