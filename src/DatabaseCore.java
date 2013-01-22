@@ -128,7 +128,6 @@ public class DatabaseCore {
 					index++;
 				}
 
-				logger.info("Executing: " + statement.toString());
 				result = statement.executeQuery();
 
 				list = extractData(result);
@@ -205,7 +204,6 @@ public class DatabaseCore {
 					index++;
 				}
 
-				logger.info("Executing: " + statement.toString());
 				statement.executeUpdate();
 				rs = statement.getGeneratedKeys();
 				if (rs != null && rs.next()) {
