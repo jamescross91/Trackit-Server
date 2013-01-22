@@ -23,17 +23,17 @@ public class DeviceLocationLoadResource extends ServerResource {
 	public Representation acceptItem(Representation entity) {
 		Representation result = null;
 		Form form = new Form(entity);
-		String deviceId = form.getFirstValue("deviceID");
-		String authToken = form.getFirstValue("authToken");
+		String device_id = form.getFirstValue("device_id");
+		String authToken = form.getFirstValue("auth_token");
 
-		Device device = new Device(deviceId);
+		Device device = new Device(device_id);
 		device.loadDevice();
 		//Does the device authenticate?
 		if(!device.authenticateToken(authToken))
 			return null;
 		
 		//Load the most recent location for the device
-		ArrayList<Device> children = loadParentsChildren(deviceId);
+		ArrayList<Device> children = loadParentsChildren(device_id);
 		for(int i = 0; i < children.size(); i++){
 			AlertsManager manager = new AlertsManager();
 			manager.setDevice(children.get(i).device_id);

@@ -144,6 +144,7 @@ public class DeviceLocation implements Jsonifiable{
 		network = (String) thisLoc.get("network");
 		data_connection = (String) thisLoc.get("data_connection");
 		velocity = (int) thisLoc.get("velocity");
+		this.device_id = device_id;
 
 		return true;
 	}
