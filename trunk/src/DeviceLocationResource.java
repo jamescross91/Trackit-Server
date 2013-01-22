@@ -15,7 +15,7 @@ public class DeviceLocationResource extends ServerResource {
 	public Representation acceptItem(Representation entity) {
 		Representation result = null;
 		Form form = new Form(entity);
-		// String itemName = form.getFirstValue(name)
+
 		double lat = Double.parseDouble(form.getFirstValue("latitude"));
 		double lng = Double.parseDouble(form.getFirstValue("longitude"));
 		double accuracy = Double.parseDouble(form.getFirstValue("accuracy"));
@@ -33,11 +33,6 @@ public class DeviceLocationResource extends ServerResource {
 		int battery = 10;
 		boolean charging = true;
 
-		// public DeviceLocation(int device_id, String parent_username,
-		// String auth_token, double latitude,
-		// double longitude, String location_source, double altitude,
-		// double accuracy, double bearing, int battery, boolean is_charging,
-		// String network, String data_connection, double velocity) {
 
 		DeviceLocation locInput = new DeviceLocation(deviceId, authToken, lat,
 				lng, provider, altitude, accuracy, bearing, battery, charging,

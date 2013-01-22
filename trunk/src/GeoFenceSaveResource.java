@@ -52,9 +52,11 @@ public class GeoFenceSaveResource extends ServerResource {
 			manager.processGeofenceUpdates();
 
 			// Recompute the location alerts
-			ArrayList<Device> devices = loadParentsDevices(device_id);
+			ArrayList<Device> devices = loadParentsChildren(device_id);
 			for(int i = 0; i < devices.size(); i++){
-				manager.setLocation(loadLatest(devices.get(i).device_id, devices.get(i).auth_token));
+				DeviceLocation latestLoc = new DeviceLocation();
+				latestLoc.loadLatest(devices.get(i).device_id);
+				manager.setLocation(latestLoc);
 				manager.processAlerts();
 			}
 			
@@ -77,7 +79,7 @@ public class GeoFenceSaveResource extends ServerResource {
 		return object;
 	}
 
-	private ArrayList<Device> loadParentsDevices(String parent_device_id) {
+	private ArrayList<Device> loadParentsChildren(String parent_device_id) {
 		Device device = new Device(parent_device_id);
 		device.loadDevice();
 		
@@ -108,55 +110,5 @@ public class GeoFenceSaveResource extends ServerResource {
 		}
 
 		return devices;
-	}
-
-	private DeviceLocation loadLatest(String device_id, String auth_token) {
-
-		List<HashMap<String, Object>> result = null;
-
-		String sqlString = "SELECT * FROM location_details WHERE device_id = ? ORDER BY entry_time DESC LIMIT  1";
-		LinkedHashMap<String, Object> data = new LinkedHashMap<String, Object>();
-		data.put("device_id", device_id);
-
-		try {
-			result = DatabaseCore.executeSqlQuery(sqlString, data);
-		} catch (Exception e) {
-			logger.error("Error loading latest device location for device: "
-					+ device_id);
-			e.printStackTrace();
-		}
-
-		if (result.size() > 1) {
-			logger.error("Multiple locations found for: " + device_id
-					+ " something is broken!");
-			return null;
-		}
-
-		if (result.size() == 0) {
-			logger.error("Unable to find the most recent location for device id: "
-					+ device_id);
-
-			return null;
-		}
-
-		// Check the username provided against the database
-		HashMap<String, Object> thisLoc = result.get(0);
-		double lat = (double) thisLoc.get("latitude");
-		double lng = (double) thisLoc.get("longitude");
-		String locSource = (String) thisLoc.get("location_source");
-		int alt = (int) thisLoc.get("altitude");
-		double accuracy = (double) thisLoc.get("accuracy");
-		int bearing = (int) thisLoc.get("bearing");
-		int batt = (int) thisLoc.get("battery");
-		boolean charge = (boolean) thisLoc.get("is_charging");
-		String network = (String) thisLoc.get("network");
-		String data_connection = (String) thisLoc.get("data_connection");
-		int velocity = (int) thisLoc.get("velocity");
-
-		DeviceLocation loc = new DeviceLocation(device_id, auth_token, lat,
-				lng, locSource, alt, accuracy, bearing, batt, charge, network,
-				data_connection, velocity);
-
-		return loc;
 	}
 }

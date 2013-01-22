@@ -1,4 +1,6 @@
+import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.json.JSONException;
@@ -22,6 +24,10 @@ public class DeviceLocation implements Jsonifiable{
 
 	private static Logger logger = Logger.getLogger(DeviceLocation.class);
 
+	//Overload the constructor 
+	public DeviceLocation(){
+	}
+	
 	public DeviceLocation(String device_id,
 			String auth_token, double latitude, double longitude,
 			String location_source, double altitude, double accuracy,
@@ -91,6 +97,53 @@ public class DeviceLocation implements Jsonifiable{
 			logger.error("Error inserting location update into the database for device id: "
 					+ device_id);
 		}
+
+		return true;
+	}
+	
+	//Load the latest location for this device	
+	public boolean loadLatest(String device_id) {
+
+		List<HashMap<String, Object>> result = null;
+
+		String sqlString = "SELECT * FROM location_details WHERE device_id = ? ORDER BY entry_time DESC LIMIT  1";
+		LinkedHashMap<String, Object> data = new LinkedHashMap<String, Object>();
+		data.put("device_id", device_id);
+
+		try {
+			result = DatabaseCore.executeSqlQuery(sqlString, data);
+		} catch (Exception e) {
+			logger.error("Error loading latest device location for device: "
+					+ device_id);
+			e.printStackTrace();
+		}
+
+		if (result.size() > 1) {
+			logger.error("Multiple locations found for: " + device_id
+					+ " something is broken!");
+			return false;
+		}
+
+		if (result.size() == 0) {
+			logger.error("Unable to find the most recent location for device id: "
+					+ device_id);
+
+			return false;
+		}
+
+		// Check the username provided against the database
+		HashMap<String, Object> thisLoc = result.get(0);
+		latitude = (double) thisLoc.get("latitude");
+		longitude = (double) thisLoc.get("longitude");
+		location_source = (String) thisLoc.get("location_source");
+		altitude = (int) thisLoc.get("altitude");
+		accuracy = (double) thisLoc.get("accuracy");
+		bearing = (int) thisLoc.get("bearing");
+		battery = (int) thisLoc.get("battery");
+		is_charging = (boolean) thisLoc.get("is_charging");
+		network = (String) thisLoc.get("network");
+		data_connection = (String) thisLoc.get("data_connection");
+		velocity = (int) thisLoc.get("velocity");
 
 		return true;
 	}
