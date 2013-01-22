@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -44,15 +45,19 @@ public class GeoFenceSaveResource extends ServerResource {
 			handler.setParent_username(thisDevice.parent_username);
 			handler.savePoint();
 
-			//Issue an update to devices asking them to reload their geofences
+			// Issue an update to devices asking them to reload their geofences
 			AlertsManager manager = new AlertsManager();
 			manager.setDevice(device_id);
 			manager.setMarker_id(marker_id);
 			manager.processGeofenceUpdates();
+
+			// Recompute the location alerts
+			ArrayList<Device> devices = loadParentsDevices(device_id);
+			for(int i = 0; i < devices.size(); i++){
+				manager.setLocation(loadLatest(devices.get(i).device_id, devices.get(i).auth_token));
+				manager.processAlerts();
+			}
 			
-			//Recompute the location alerts
-			manager.setLocation(loadLatest(device_id, auth_token));
-			manager.processAlerts();
 
 			result = new JsonRepresentation(handler.toJson());
 		} else
@@ -70,6 +75,39 @@ public class GeoFenceSaveResource extends ServerResource {
 		}
 
 		return object;
+	}
+
+	private ArrayList<Device> loadParentsDevices(String parent_device_id) {
+		Device device = new Device(parent_device_id);
+		device.loadDevice();
+		
+		ArrayList<Device> devices = new ArrayList<Device>();
+
+		List<HashMap<String, Object>> result = null;
+		String sqlString = "SELECT * FROM device_details WHERE parent_username = ? AND is_child = 1";
+
+		LinkedHashMap<String, Object> data = new LinkedHashMap<String, Object>();
+		data.put("parent_username", device.parent_username);
+
+		try {
+			result = DatabaseCore.executeSqlQuery(sqlString, data);
+		} catch (Exception e) {
+			logger.error("Error loading parents device details from the database");
+			e.printStackTrace();
+		}
+
+		if (result.size() == 0) {
+			// No devices
+		}
+
+		for (int i = 0; i < result.size(); i++) {
+			HashMap<String, Object> thisEntry = result.get(i);
+			Device thisDevice = new Device((String) thisEntry.get("device_id"));
+			thisDevice.loadDevice();
+			devices.add(thisDevice);
+		}
+
+		return devices;
 	}
 
 	private DeviceLocation loadLatest(String device_id, String auth_token) {
@@ -97,6 +135,8 @@ public class GeoFenceSaveResource extends ServerResource {
 		if (result.size() == 0) {
 			logger.error("Unable to find the most recent location for device id: "
 					+ device_id);
+
+			return null;
 		}
 
 		// Check the username provided against the database
@@ -104,19 +144,19 @@ public class GeoFenceSaveResource extends ServerResource {
 		double lat = (double) thisLoc.get("latitude");
 		double lng = (double) thisLoc.get("longitude");
 		String locSource = (String) thisLoc.get("location_source");
-		double alt = (double) thisLoc.get("altitude");
+		int alt = (int) thisLoc.get("altitude");
 		double accuracy = (double) thisLoc.get("accuracy");
-		double bearing = (double) thisLoc.get("bearing");
+		int bearing = (int) thisLoc.get("bearing");
 		int batt = (int) thisLoc.get("battery");
 		boolean charge = (boolean) thisLoc.get("is_charging");
 		String network = (String) thisLoc.get("network");
 		String data_connection = (String) thisLoc.get("data_connection");
-		double velocity = (double) thisLoc.get("velocity");
+		int velocity = (int) thisLoc.get("velocity");
 
 		DeviceLocation loc = new DeviceLocation(device_id, auth_token, lat,
 				lng, locSource, alt, accuracy, bearing, batt, charge, network,
 				data_connection, velocity);
-		
+
 		return loc;
 	}
 }
