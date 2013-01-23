@@ -11,6 +11,7 @@ public abstract class PushNotification implements Pushable {
 	public static final int LOCATION_UPDATE = 1;
 	public static final int GEOFENCE_CROSS = 2;
 	public static final int MARKER_UPDATE = 3;
+	public static final int LOCATION_REQUEST = 4;
 
 	protected String device_id;
 	protected Device device;

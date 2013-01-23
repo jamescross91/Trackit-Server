@@ -5,7 +5,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 //Class containing common functionality for applications wishing to connect to the system externally
-public class Device{
+public class Device {
 	// Authenticate
 	// Login
 	// Execute SQL - remember we will need to handle both querys and inserts
@@ -21,13 +21,13 @@ public class Device{
 	public boolean is_child;
 	public String gcm_token;
 	public String OS;
-	
+
 	private static Logger logger = Logger.getLogger(Device.class);
 
-	public Device(String device_id){
+	public Device(String device_id) {
 		this.device_id = device_id;
 	}
-	
+
 	protected boolean authenticateToken(String token) {
 
 		if (token.compareTo(auth_token) != 0) {
@@ -39,8 +39,8 @@ public class Device{
 
 		return true;
 	}
-	
-	public boolean loadDevice(){
+
+	public boolean loadDevice() {
 		List<HashMap<String, Object>> result = null;
 
 		String sqlString = "SELECT * FROM device_details WHERE device_id = ?";
@@ -66,7 +66,7 @@ public class Device{
 
 		// Check the username provided against the database
 		HashMap<String, Object> thisDevice = result.get(0);
-		
+
 		auth_token = (String) thisDevice.get("auth_token");
 		parent_username = (String) thisDevice.get("parent_username");
 		make = (String) thisDevice.get("make");
@@ -74,7 +74,17 @@ public class Device{
 		is_child = (boolean) thisDevice.get("is_child");
 		gcm_token = (String) thisDevice.get("gcm_token");
 		OS = (String) thisDevice.get("OS");
-		
+
 		return true;
+	}
+
+	public void requestLocUpdate() {
+		if (OS.compareTo("Android") == 0) {
+			logger.info("Requesting location update for device: " + device_id);
+			AndroidPushNotification notif = new AndroidPushNotification(
+					PushNotification.LOCATION_REQUEST, device_id);
+			notif.device = this;
+			notif.pushMessage();
+		}
 	}
 }
