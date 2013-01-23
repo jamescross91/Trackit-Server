@@ -23,24 +23,29 @@ public class DeviceLocationLoadResource extends ServerResource {
 	public Representation acceptItem(Representation entity) {
 		Representation result = null;
 		Form form = new Form(entity);
-		String device_id = form.getFirstValue("device_id");
+		String parDevice_id = form.getFirstValue("device_id");
 		String authToken = form.getFirstValue("auth_token");
 
-		Device device = new Device(device_id);
+		Device device = new Device(parDevice_id);
 		device.loadDevice();
 		//Does the device authenticate?
 		if(!device.authenticateToken(authToken))
 			return null;
 		
 		//Load the most recent location for the device
-		ArrayList<Device> children = loadParentsChildren(device_id);
+		ArrayList<Device> children = loadParentsChildren(parDevice_id);
 		for(int i = 0; i < children.size(); i++){
+			Device child = children.get(i);
+			child.loadDevice();
 			AlertsManager manager = new AlertsManager();
-			manager.setDevice(children.get(i).device_id);
+			manager.setDevice(child.device_id);
 			DeviceLocation latestLoc = new DeviceLocation();
-			latestLoc.loadLatest(children.get(i).device_id);
+			latestLoc.loadLatest(child.device_id);
 			manager.setLocation(latestLoc);
 			manager.processAlerts();
+			
+			//Push to the phone requesting a location update
+			child.requestLocUpdate();
 		}
 
 		return (result);
