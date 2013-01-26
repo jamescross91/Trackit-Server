@@ -82,7 +82,7 @@ public class Device {
 		if (OS.compareTo("Android") == 0) {
 			logger.info("Requesting location update for device: " + device_id);
 			AndroidPushNotification notif = new AndroidPushNotification(
-					PushNotification.LOCATION_REQUEST, device_id);
+					PushNotification.LOCATION_REQUEST, this);
 			notif.device = this;
 			notif.pushMessage();
 		}

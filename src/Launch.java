@@ -7,20 +7,6 @@ import org.restlet.util.Series;
 public class Launch {
 	public static void main(String[] args) throws Exception {
 
-//		List<HashMap<String, Object>> results = DatabaseCore.executeSqlQuery("SELECT * FROM location_details" );
-//
-//		for(int i = 0; i < results.size(); i++){
-//			HashMap<String, Object> thisMap = new HashMap<String, Object>();
-//			thisMap = results.get(i);
-//			
-//			for(Map.Entry<String, Object> entry : thisMap.entrySet()){
-//				System.out.println(entry.getKey() + "/" + entry.getValue());
-//			}
-//				
-//		}	
-		
-		//System.out.println(newUser.login("password"));
-		
 		//Create a new Component.
 		Component component = new Component();
 
@@ -36,6 +22,7 @@ public class Launch {
 
 		//Attach the sample application.
 		component.getDefaultHost().attach("/device", new LocationApplication());
+		component.getDefaultHost().attach("/web", new WebApplication());
 
 		//Start the component.
 		component.start();

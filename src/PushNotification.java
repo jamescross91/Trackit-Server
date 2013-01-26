@@ -13,7 +13,6 @@ public abstract class PushNotification implements Pushable {
 	public static final int MARKER_UPDATE = 3;
 	public static final int LOCATION_REQUEST = 4;
 
-	protected String device_id;
 	protected Device device;
 	protected DeviceLocation deviceLocation;
 	protected String alertMessage;
@@ -22,11 +21,9 @@ public abstract class PushNotification implements Pushable {
 	
 	private static Logger logger = Logger.getLogger(PushNotification.class);
 
-	public PushNotification(int alertType, String device_id) {
+	public PushNotification(int alertType, Device device) {
 		this.alertType = alertType;
-		this.device_id = device_id;
-		device = new Device(device_id);
-		device.loadDevice();
+		this.device = device;
 	}
 
 	public void setAlertMessage(String alertMessage) {

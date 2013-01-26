@@ -1,3 +1,9 @@
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+
 import org.restlet.data.Form;
 import org.restlet.representation.Representation;
 import org.restlet.resource.Get;
@@ -23,8 +29,8 @@ public class DeviceLocationResource extends ServerResource {
 		// String provider = form.getFirstValue("provider");
 		double bearing = Double.parseDouble(form.getFirstValue("bearing"));
 		double speed = Double.parseDouble(form.getFirstValue("speed"));
-		String deviceId = form.getFirstValue("deviceID");
-		String authToken = form.getFirstValue("authToken");
+		String device_id = form.getFirstValue("deviceID");
+		String auth_token = form.getFirstValue("authToken");
 		// int battery = Integer.parseInt(form.getFirstValue("battlevel"));
 		// boolean charging =
 		// Boolean.parseBoolean(form.getFirstValue("charging"));
@@ -33,8 +39,11 @@ public class DeviceLocationResource extends ServerResource {
 		int battery = 10;
 		boolean charging = true;
 
+		Device thisDevice = new Device(device_id);
+		thisDevice.loadDevice();
+		if (thisDevice.authenticateToken(auth_token)) {
 
-		DeviceLocation locInput = new DeviceLocation(deviceId, authToken, lat,
+		DeviceLocation locInput = new DeviceLocation(thisDevice, lat,
 				lng, provider, altitude, accuracy, bearing, battery, charging,
 				"guff", "3g", speed);
 		locInput.persistLocation();
@@ -45,6 +54,7 @@ public class DeviceLocationResource extends ServerResource {
 
 		System.out.println("My current latitude is " + lat
 				+ " and longitude is " + lng + "\n");
+		}
 
 		return (result);
 	}
