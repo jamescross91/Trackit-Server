@@ -38,7 +38,7 @@ public class DeviceLocationLoadResource extends ServerResource {
 			Device child = children.get(i);
 			child.loadDevice();
 			AlertsManager manager = new AlertsManager();
-			manager.setDevice(child.device_id);
+			manager.setDevice(child);
 			DeviceLocation latestLoc = new DeviceLocation();
 			latestLoc.loadLatest(child.device_id);
 			manager.setLocation(latestLoc);

@@ -47,7 +47,7 @@ public class GeoFenceSaveResource extends ServerResource {
 
 			// Issue an update to devices asking them to reload their geofences
 			AlertsManager manager = new AlertsManager();
-			manager.setDevice(device_id);
+			manager.setDevice(thisDevice);
 			manager.setMarker_id(marker_id);
 			manager.processGeofenceUpdates();
 

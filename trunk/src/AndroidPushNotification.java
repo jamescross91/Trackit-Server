@@ -17,8 +17,8 @@ public class AndroidPushNotification extends PushNotification implements
 	private static Logger logger = Logger
 			.getLogger(AndroidPushNotification.class);
 
-	public AndroidPushNotification(int alertType, String device_id) {
-		super(alertType, device_id);
+	public AndroidPushNotification(int alertType, Device device) {
+		super(alertType, device);
 	}
 
 	@Override

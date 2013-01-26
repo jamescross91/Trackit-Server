@@ -16,14 +16,13 @@ public class AlertsManager {
 	
 	public void setLocation(DeviceLocation deviceLocation){
 		this.deviceLocation = deviceLocation;
-		sourceDevice = new Device(deviceLocation.device_id);
+		sourceDevice = new Device(deviceLocation.getDevice().device_id);
 		sourceDevice.loadDevice();
 		loadPoints();
 	}
 	
-	public void setDevice(String device_id){
-		sourceDevice = new Device(device_id);
-		sourceDevice.loadDevice();
+	public void setDevice(Device device){
+		sourceDevice = device;
 		loadPoints();
 	}
 
@@ -70,14 +69,14 @@ public class AlertsManager {
 
 	private void sendGeoChangeAlert(Device parentDevice) {
 		AndroidPushNotification notif = new AndroidPushNotification(
-				AndroidPushNotification.MARKER_UPDATE, parentDevice.device_id);
+				AndroidPushNotification.MARKER_UPDATE, parentDevice);
 		notif.setmarker_id(marker_id);
 		notif.pushMessage();
 	}
 
 	private void sendAndroidLocAlert(Device parentDevice) {
 		AndroidPushNotification notif = new AndroidPushNotification(
-				AndroidPushNotification.LOCATION_UPDATE, parentDevice.device_id);
+				AndroidPushNotification.LOCATION_UPDATE, parentDevice);
 		notif.setDeviceLocation(deviceLocation);
 		notif.pushMessage();
 	}
@@ -90,7 +89,7 @@ public class AlertsManager {
 			if (alertString != null) {
 				AndroidPushNotification notif = new AndroidPushNotification(
 						AndroidPushNotification.GEOFENCE_CROSS,
-						parentDevice.device_id);
+						parentDevice);
 				notif.setAlertMessage(alertString);
 				notif.pushMessage();
 			}

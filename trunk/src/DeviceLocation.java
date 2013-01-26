@@ -19,8 +19,8 @@ public class DeviceLocation implements Jsonifiable{
 	private String network;
 	private String data_connection;
 	private double velocity;
-	protected String device_id;
 	protected String auth_token;
+	private Device device;
 
 	private static Logger logger = Logger.getLogger(DeviceLocation.class);
 
@@ -28,14 +28,13 @@ public class DeviceLocation implements Jsonifiable{
 	public DeviceLocation(){
 	}
 
-	public DeviceLocation(String device_id,
-			String auth_token, double latitude, double longitude,
+	public DeviceLocation(Device device, double latitude, double longitude,
 			String location_source, double altitude, double accuracy,
 			double bearing, int battery, boolean is_charging, String network,
 			String data_connection, double velocity) {
 
 		// Set the private variables for this instance
-		this.device_id = device_id;
+		this.device = device;
 		this.auth_token = auth_token;
 		// this.entry_time = entry_time;
 		this.latitude = latitude;
@@ -53,13 +52,8 @@ public class DeviceLocation implements Jsonifiable{
 
 	public boolean persistLocation() {
 		long index = -1;
-
-		//Load the information for this device from the database and attempt to authenticate it against the provided token
-		Device thisDevice = new Device(device_id);
-		if(!thisDevice.loadDevice())
-			return false;
 		
-		if (!validateData() || !thisDevice.authenticateToken(auth_token)){
+		if (!validateData()){
 			logger.warn("Devices location update was invalid");
 			return false;
 		}
@@ -70,7 +64,7 @@ public class DeviceLocation implements Jsonifiable{
 		String sqlString = "INSERT INTO location_details (device_id, latitude, longitude, location_source, "
 				+ "accuracy, altitude, bearing, battery, is_charging, network, data_connection, velocity) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		LinkedHashMap<String, Object> data = new LinkedHashMap<String, Object>();
-		data.put("device_id", device_id);
+		data.put("device_id", device.device_id);
 		// data.put("entry_time", "timestamp");
 		data.put("latitude", latitude);
 		data.put("longitude", longitude);
@@ -89,13 +83,13 @@ public class DeviceLocation implements Jsonifiable{
 		} catch (Exception e) {
 
 			logger.error("Error inserting location update into the database for device id: "
-					+ device_id);
+					+ device.device_id);
 			e.printStackTrace();
 		}
 
 		if (index == -1) {
 			logger.error("Error inserting location update into the database for device id: "
-					+ device_id);
+					+ device.device_id);
 		}
 
 		return true;
@@ -144,7 +138,7 @@ public class DeviceLocation implements Jsonifiable{
 		network = (String) thisLoc.get("network");
 		data_connection = (String) thisLoc.get("data_connection");
 		velocity = (int) thisLoc.get("velocity");
-		this.device_id = device_id;
+		this.device.device_id = device_id;
 
 		return true;
 	}
@@ -160,7 +154,7 @@ public class DeviceLocation implements Jsonifiable{
 			return true;
 		}
 		logger.warn("Invalid battery data for location update from device ID: "
-				+ device_id);
+				+ device.device_id);
 		return false;
 	}
 
@@ -206,10 +200,11 @@ public class DeviceLocation implements Jsonifiable{
 			object.put("is_charging", is_charging);
 			object.put("network", network);
 			object.put("data_connection", data_connection);
+			object.put("device_id", device.device_id);
 			object.put("velocity", velocity);
 		} catch (JSONException e) {
 			logger.error("An exception occured while trying to Jsonify the login result for device id "
-					+ device_id);
+					+ device.device_id);
 			e.printStackTrace();
 		}
 
@@ -230,5 +225,9 @@ public class DeviceLocation implements Jsonifiable{
 
 	public void setLongitude(double longitude) {
 		this.longitude = longitude;
+	}
+	
+	public Device getDevice(){
+		return device;
 	}
 }
