@@ -11,7 +11,7 @@ import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
 
-public class WebResource extends ServerResource {
+public class WebMapResource extends ServerResource {
 
 	@Get("html")
 	public Representation represent() {
@@ -20,7 +20,7 @@ public class WebResource extends ServerResource {
 		Reader reader;
 		
 	    try {
-	    	File indexFile = new File("resources/index.html");
+	    	File indexFile = new File("resources/map.html");
 			FileInputStream fileInput = new FileInputStream(indexFile);
 	    	reader = new InputStreamReader(fileInput, "UTF-8");
 	        int thisChar = 0;
