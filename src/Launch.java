@@ -9,7 +9,10 @@ public class Launch {
 
 		//Create a new Component.
 		Component component = new Component();
-
+		
+		//Allow file handling
+		component.getClients().add(Protocol.FILE);
+		
 		//Create a new HTTPS server listening on port 2620.
 		Server server = component.getServers().add(Protocol.HTTPS, 2610);
 		Series<Parameter> params = server.getContext().getParameters(); 
