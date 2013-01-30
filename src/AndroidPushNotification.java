@@ -38,8 +38,25 @@ public class AndroidPushNotification extends PushNotification implements
 		case LOCATION_REQUEST:
 			resultString = requestLocUpdate();
 			break;
+		case DEVICE_DELETE: forceDeleteDevice();
+			break;
 		}
 		return resultString;
+	}
+	
+	private String forceDeleteDevice(){
+		Sender sender = new Sender(ReadProperties.getProperty("gcm_key"));
+		Message message = new Message.Builder().addData("delete", "Device is being kicked").build();	
+		Result result;
+		try {
+			result = sender.send(message, device.gcm_token, 1);
+			return result.toString();
+		} catch (IOException e) {
+			logger.error("Loc update request push failed "
+					+ e.toString());
+		}
+		
+		return null;
 	}
 	
 	private String requestLocUpdate(){

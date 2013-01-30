@@ -37,7 +37,9 @@ public class WebLoginResource extends ServerResource {
 		if((parent_username == null) || (auth_Token == null))
 			return getLoginRetryPage();
 		
-		if(auth_Token.compareTo(loadCookie(parent_username)) == 0){
+		User thisUser = new User(parent_username);
+		
+		if(thisUser.validateCookie(auth_Token)){
 			//Cookie matches what we expect!
 			return getManagementPage();
 		}
@@ -60,18 +62,21 @@ public class WebLoginResource extends ServerResource {
 		
 		// Successful login
 
+		// Delete cookies here
+		
 		// Set the cookie
-		String authToken = generateToken();
+		String authToken = thisUser.generateAndStoreCookie();
 		CookieSetting csAuth = new CookieSetting(0, COOKIE_AUTH, authToken);
 		CookieSetting csUser = new CookieSetting(0, COOKIE_USER, username);
+		
+		csAuth.setPath("/");
+		csUser.setPath("/");
+		
 		Series<CookieSetting> cookieSettings = this.getCookieSettings();
 		cookieSettings.clear();
 		cookieSettings.add(csAuth);
 		cookieSettings.add(csUser);
 		this.setCookieSettings(cookieSettings);
-
-		// Store the cookie in the database
-		storeCookie(username, authToken);
 
 		return getManagementPage();
 	}
@@ -117,68 +122,5 @@ public class WebLoginResource extends ServerResource {
 		}
 
 		return new StringRepresentation(builder.toString(), MediaType.TEXT_HTML);
-	}
-	
-	private String loadCookie(String parent_username){
-		List<HashMap<String, Object>> result = null;
-
-		String sqlString = "SELECT * FROM web_cookies WHERE parent_username = ?";
-		LinkedHashMap<String, Object> data = new LinkedHashMap<String, Object>();
-		data.put("parent_username", parent_username);
-
-		try {
-			result = DatabaseCore.executeSqlQuery(sqlString, data);
-		} catch (Exception e) {
-			logger.error("Error extracting web cookie from the database, parent_username is: "
-					+ parent_username);
-			e.printStackTrace();
-		}
-
-		if (result.size() > 1) {
-			logger.error("Multiple cookies found for: " + parent_username
-					+ " something is broken!");
-			return new String();
-		}
-
-		if (result.size() == 0)
-			return new String();
-
-		// Check the username provided against the database
-		HashMap<String, Object> thisDevice = result.get(0);
-
-		return (String) thisDevice.get("cookie");
-	}
-
-	private void storeCookie(String parent_username, String cookie) {
-		String sqlString = "INSERT INTO web_cookies(parent_username, cookie) values(?, ?) ON DUPLICATE KEY UPDATE cookie=?";
-
-		LinkedHashMap<String, Object> data = new LinkedHashMap<String, Object>();
-		data.put("parent_username", parent_username);
-		data.put("cookie", cookie);
-		data.put("cookie1", cookie);
-
-		try {
-			DatabaseCore.executeSqlUpdate(sqlString, data);
-		} catch (Exception e) {
-			logger.error("Error inserting web cookie into the database for parent username: "
-					+ parent_username);
-		}
-	}
-
-	private String generateToken() {
-		// Create a random authentication token to be used with the device, in
-		// the same way we create a salt for passwords
-		SecureRandom randomSalt = new SecureRandom();
-		byte[] salt = new byte[Integer.parseInt(ReadProperties
-				.getProperty("salt_bytes")) * 2];
-		randomSalt.nextBytes(salt);
-
-		BigInteger bigInt = new BigInteger(1, salt);
-		String hex = bigInt.toString(16);
-		int paddingLength = (salt.length * 2) - hex.length();
-		if (paddingLength > 0)
-			return String.format("%0" + paddingLength + "d", 0) + hex;
-		else
-			return hex;
 	}
 }

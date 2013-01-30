@@ -77,6 +77,44 @@ public class Device {
 
 		return true;
 	}
+	
+	public boolean deleteDevice(){
+		loadDevice();
+		
+		if(deleteFromDatabase()){
+			switch (OS) {
+			case "Android":
+				sendPushToDelete();
+				break;
+			}
+		}
+		
+		return true;
+	}
+	
+	private boolean sendPushToDelete(){
+		AndroidPushNotification notif = new AndroidPushNotification(PushNotification.DEVICE_DELETE, this);
+		notif.pushMessage();
+		return true;
+	}
+	
+	private boolean deleteFromDatabase(){
+		LinkedHashMap<String, Object> data = new LinkedHashMap<String, Object>();
+		String sqlString = "DELETE FROM device_details WHERE device_id = ?";
+		
+		data.put("device_id", device_id);
+
+		try {
+			DatabaseCore.executeSqlUpdate(sqlString, data);
+		} catch (Exception e) {
+			logger.error("Error inserting radial geofence into the database for username: "
+					+ parent_username);
+			e.printStackTrace();
+			return false;
+		}
+
+		return true;
+	}
 
 	public void requestLocUpdate() {
 		if (OS.compareTo("Android") == 0) {
