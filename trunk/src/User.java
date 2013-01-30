@@ -41,6 +41,10 @@ public class User {
 		}
 		return false;
 	}
+	
+	public boolean validateCookie(String cookie){
+		return(cookie.compareTo(loadCookie()) == 0);
+	}
 
 	public HashMap<String, Object> createUser(String password,
 			String firstName, String lastName, String emailAddress) {
@@ -126,6 +130,73 @@ public class User {
 		emailAddress = (String) thisUser.get("email_address");
 
 		return true;
+	}
+	
+	private String loadCookie(){
+		List<HashMap<String, Object>> result = null;
+
+		String sqlString = "SELECT * FROM web_cookies WHERE parent_username = ?";
+		LinkedHashMap<String, Object> data = new LinkedHashMap<String, Object>();
+		data.put("parent_username", userName);
+
+		try {
+			result = DatabaseCore.executeSqlQuery(sqlString, data);
+		} catch (Exception e) {
+			logger.error("Error extracting web cookie from the database, parent_username is: "
+					+ userName);
+			e.printStackTrace();
+		}
+
+		if (result.size() > 1) {
+			logger.error("Multiple cookies found for: " + userName
+					+ " something is broken!");
+			return new String();
+		}
+
+		if (result.size() == 0)
+			return new String();
+
+		// Check the username provided against the database
+		HashMap<String, Object> thisDevice = result.get(0);
+
+		return (String) thisDevice.get("cookie");
+	}
+
+	public String generateAndStoreCookie() {
+		String cookie = generateCookie();
+		
+		String sqlString = "INSERT INTO web_cookies(parent_username, cookie) values(?, ?) ON DUPLICATE KEY UPDATE cookie=?";
+
+		LinkedHashMap<String, Object> data = new LinkedHashMap<String, Object>();
+		data.put("parent_username", userName);
+		data.put("cookie", cookie);
+		data.put("cookie1", cookie);
+
+		try {
+			DatabaseCore.executeSqlUpdate(sqlString, data);
+		} catch (Exception e) {
+			logger.error("Error inserting web cookie into the database for parent username: "
+					+ userName);
+		}
+		
+		return cookie;
+	}
+
+	private String generateCookie() {
+		// Create a random authentication token to be used with the device, in
+		// the same way we create a salt for passwords
+		SecureRandom randomSalt = new SecureRandom();
+		byte[] salt = new byte[Integer.parseInt(ReadProperties
+				.getProperty("salt_bytes")) * 2];
+		randomSalt.nextBytes(salt);
+
+		BigInteger bigInt = new BigInteger(1, salt);
+		String hex = bigInt.toString(16);
+		int paddingLength = (salt.length * 2) - hex.length();
+		if (paddingLength > 0)
+			return String.format("%0" + paddingLength + "d", 0) + hex;
+		else
+			return hex;
 	}
 
 	/*

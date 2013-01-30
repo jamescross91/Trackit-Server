@@ -22,6 +22,7 @@ public class LocationApplication extends Application {
 		router.attach("/parent/geofence/delete", GeoFenceDeleteResource.class);
 		router.attach("/gcm/update", GCMTokenUpdateResource.class);
 		router.attach("/parent/location/load", DeviceLocationLoadResource.class);
+		router.attach("/delete", DeviceDeleteResource.class);
 			
 		return router;
 	}

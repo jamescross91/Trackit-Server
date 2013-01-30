@@ -14,7 +14,9 @@ import org.restlet.util.Series;
 
 public class WebDeviceLoaderResource extends ServerResource {
 	private static final String COOKIE_USER = "trackit_user";
-	private static Logger logger = Logger.getLogger(WebDeviceLoaderResource.class);
+	private static final String COOKIE_AUTH = "trackit_auth";
+	private static Logger logger = Logger
+			.getLogger(WebDeviceLoaderResource.class);
 
 	@Post
 	public Representation acceptItem(Representation entity) {
@@ -22,25 +24,64 @@ public class WebDeviceLoaderResource extends ServerResource {
 		StringBuilder builder = new StringBuilder();
 		Series<Cookie> cookies = this.getRequest().getCookies();
 		String parent_username = cookies.getFirstValue(COOKIE_USER);
+		String auth_Token = cookies.getFirstValue(COOKIE_AUTH);
+
+		if ((parent_username == null) || (auth_Token == null))
+			return null;
 		
-		if(parent_username == null)
+		User thisUser = new User(parent_username);
+		
+		//Is this a valid cookie?
+		if(!thisUser.validateCookie(auth_Token))
 			return null;
 
 		ArrayList<Device> devices = loadParentsChildren(parent_username);
 		
-		for(int i = 0; i < devices.size(); i++){
+		builder.append("\n");
+		
+		for (int i = 0; i < devices.size(); i++) {
 			Device thisDevice = devices.get(i);
-			
-			builder.append("<div class=\"psdg-left\">" + thisDevice.device_id + "</div>\n");
-			builder.append("<div class=\"psdg-right\">" + thisDevice.parent_username + "</div>\n");
-			builder.append("<div class=\"psdg-right\">" + thisDevice.make + "</div>\n");
-			builder.append("<div class=\"psdg-right\">" + thisDevice.model + "</div>\n");
-			builder.append("<div class=\"psdg-right\">" + thisDevice.OS + "</div>\n");
+
+			builder.append("<div class=\"psdg-left\">" + thisDevice.device_id
+					+ "</div>\n");
+			builder.append("<div class=\"psdg-right\">"
+					+ thisDevice.parent_username + "</div>\n");
+			builder.append("<div class=\"psdg-right\">" + thisDevice.make
+					+ "</div>\n");
+			builder.append("<div class=\"psdg-right\">" + thisDevice.model
+					+ "</div>\n");
+			builder.append("<div class=\"psdg-right\">"
+					+ "<a href=\"#\" title=\"Delete this device\" id=\"deviceKick"
+					+ thisDevice.device_id + "\">Delete</a>" + "</div>\n");
 		}
 		
-	    return new StringRepresentation(builder.toString(), MediaType.TEXT_HTML);
+		for(int j = 0; j < devices.size(); j++){
+			Device thisDevice = devices.get(j);
+			builder.append(getDeviceKickHTML(thisDevice.device_id));
+		}
+		
+		return new StringRepresentation(builder.toString(), MediaType.TEXT_HTML);
 	}
-	
+
+	private String getDeviceKickHTML(String device_id) {
+		StringBuilder builder = new StringBuilder();
+		builder.append("\n<script type=\"text/javascript\">\n");
+		
+		builder.append("$('#deviceKick" + device_id + "').click(function (event) { event.preventDefault();")
+			.append("$.ajax({")
+			.append("type:\"POST\", url:\"/device/delete\", cache:false, dataType: \"html\",\n")
+			.append("data: { deviceID: \"" + device_id + "\" } \n")
+			.append("})\n")
+			.append(".done(function(data) { alert(\"Device delted, please refesh the page\");\n")
+			.append("});\n");		
+		
+		
+		builder.append("});");
+				builder.append("</script>\n");
+
+		return builder.toString();
+	}
+
 	private ArrayList<Device> loadParentsChildren(String parent_username) {
 		ArrayList<Device> devices = new ArrayList<Device>();
 
