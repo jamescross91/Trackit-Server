@@ -42,9 +42,8 @@ public class GeoFenceLoadResource extends ServerResource {
 					RadialGeofenceHandler marker = points.get(i);
 					object.putOnce(String.valueOf(marker.getMarker_id()),
 							marker.toJson());
-
-					result = new JsonRepresentation(object);
 				}
+				result = new JsonRepresentation(object);
 			} catch (JSONException e) {
 				logger.error("An exception occured while trying to Jsonify the radial geofence markers");
 				e.printStackTrace();
