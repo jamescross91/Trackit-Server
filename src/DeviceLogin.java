@@ -129,7 +129,7 @@ public class DeviceLogin extends Device implements Jsonifiable {
 		data.put("gcm_token", gcm_token);
 
 		try {
-			if (DatabaseCore.executeSqlUpdate(sqlString, data) != -1) {
+			if (DatabaseCore.executeSqlUpdate(sqlString, data) == -1) {
 				return true;
 			}
 		} catch (Exception e) {
@@ -179,7 +179,7 @@ public class DeviceLogin extends Device implements Jsonifiable {
 		data.put("device_id", device_id);
 
 		try {
-			if (DatabaseCore.executeSqlUpdate(sqlString, data) != -1) {
+			if (DatabaseCore.executeSqlUpdate(sqlString, data) == -1) {
 				return token;
 			}
 		} catch (Exception e) {

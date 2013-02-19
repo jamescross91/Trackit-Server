@@ -179,6 +179,8 @@ public class RadialGeofenceHandler implements Jsonifiable {
 
 		// Ensure its a positive
 		d = Math.abs(d);
+		System.out.println("############");
+		System.out.println(d + "\n");
 
 		if (d > radius)
 			return false;
