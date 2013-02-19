@@ -74,6 +74,8 @@ public class WebLoginResource extends ServerResource {
 		
 		Series<CookieSetting> cookieSettings = this.getCookieSettings();
 		cookieSettings.clear();
+		cookieSettings.removeFirst(COOKIE_AUTH);
+		cookieSettings.removeFirst(COOKIE_USER);
 		cookieSettings.add(csAuth);
 		cookieSettings.add(csUser);
 		this.setCookieSettings(cookieSettings);

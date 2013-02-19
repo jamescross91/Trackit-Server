@@ -12,6 +12,7 @@ public class AndroidPushNotification extends PushNotification implements
 	public static final String LOCATION_UPDATE_KEY = "Loc";
 	public static final String GEOFENCE_CROSS_KEY = "Geo";
 	public static final String MARKER_RELOAD_KEY = "Marker";
+	public static final String DEVICE_DELETE_KEY = "Delete";
 
 
 	private static Logger logger = Logger
@@ -46,7 +47,7 @@ public class AndroidPushNotification extends PushNotification implements
 	
 	private String forceDeleteDevice(){
 		Sender sender = new Sender(ReadProperties.getProperty("gcm_key"));
-		Message message = new Message.Builder().addData("delete", "Device is being kicked").build();	
+		Message message = new Message.Builder().addData(DEVICE_DELETE_KEY, "Device is being kicked").build();	
 		Result result;
 		try {
 			result = sender.send(message, device.gcm_token, 1);

@@ -72,7 +72,7 @@ public class WebDeviceLoaderResource extends ServerResource {
 			.append("type:\"POST\", url:\"/device/delete\", cache:false, dataType: \"html\",\n")
 			.append("data: { deviceID: \"" + device_id + "\" } \n")
 			.append("})\n")
-			.append(".done(function(data) { alert(\"Device delted, please refesh the page\");\n")
+			.append(".done(function(data) { alert(\"Device deleted, please refesh the page\");\n")
 			.append("});\n");		
 		
 		

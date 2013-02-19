@@ -54,12 +54,12 @@ public class GeoFenceSaveResource extends ServerResource {
 			// Recompute the location alerts
 			ArrayList<Device> devices = loadParentsChildren(device_id);
 			for(int i = 0; i < devices.size(); i++){
+				AlertsManager thisManager = new AlertsManager();
 				DeviceLocation latestLoc = new DeviceLocation();
 				latestLoc.loadLatest(devices.get(i).device_id);
-				manager.setLocation(latestLoc);
-				manager.processAlerts();
+				thisManager.setLocation(latestLoc);
+				thisManager.processAlerts();
 			}
-			
 
 			result = new JsonRepresentation(handler.toJson());
 		} else
