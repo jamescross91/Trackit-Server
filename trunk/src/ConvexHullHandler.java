@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class ConvexHullHandler implements Jsonifiable {
@@ -25,9 +26,9 @@ public class ConvexHullHandler implements Jsonifiable {
 	public ConvexHullHandler(String device_id) {
 		this.device_id = device_id;
 	}
-	
-	public boolean deletePoints(){
-		
+
+	public boolean deletePoints() {
+
 		LinkedHashMap<String, Object> data = new LinkedHashMap<String, Object>();
 		String sqlString = "DELETE FROM convex_geofences WHERE group_id = ?";
 		String sqlString2 = "DELETE FROM convex_details WHERE group_id = ?";
@@ -82,7 +83,7 @@ public class ConvexHullHandler implements Jsonifiable {
 			ConvexHullPoint thisPoint = new ConvexHullPoint(lat, lng, marker_id);
 			group.put(String.valueOf(marker_id), thisPoint);
 		}
-			
+
 		return group;
 	}
 
@@ -124,7 +125,7 @@ public class ConvexHullHandler implements Jsonifiable {
 		LinkedHashMap<String, Object> data = new LinkedHashMap<String, Object>();
 		long key = -1;
 
-		if (marker_id == NEVER_SAVED) {
+		if (marker_id < 0) {
 			String sqlString = "INSERT INTO convex_geofences (group_id, parent_username, latitude, longitude) VALUES(?, ?, ?, ?)";
 
 			data.put("group_id", group_id);
@@ -196,6 +197,24 @@ public class ConvexHullHandler implements Jsonifiable {
 
 	@Override
 	public JSONObject toJson() {
-		return null;
+		JSONObject object = new JSONObject();
+		try {
+			for (Entry<String, ConvexHullPoint> entry : pointList.entrySet()) {
+				ConvexHullPoint thisPoint = entry.getValue();
+				int marker_id = Integer.valueOf(entry.getKey());
+
+			}
+
+			object.put("lat", lat);
+			object.put("lng", lng);
+			object.put("radius", radius);
+			object.put("marker_id", marker_id);
+		} catch (JSONException e) {
+			logger.error("An exception occured while trying to Jsonify the radial geofence handler "
+					+ marker_id);
+			e.printStackTrace();
+		}
+
+		return object;
 	}
 }

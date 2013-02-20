@@ -1,4 +1,7 @@
-public class ConvexHullPoint {
+import org.json.JSONException;
+import org.json.JSONObject;
+
+public class ConvexHullPoint implements Jsonifiable{
 	private double latitude;
 	private double longitude;
 	private long marker_id;
@@ -31,5 +34,20 @@ public class ConvexHullPoint {
 
 	public void setMarker_id(long marker_id) {
 		this.marker_id = marker_id;
+	}
+
+	@Override
+	public JSONObject toJson() {
+		JSONObject object = new JSONObject();
+		
+		try {
+			object.put("lng", this.longitude);
+			object.put("marker_id", this.marker_id);
+			object.put("lat", this.latitude);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		
+		return object;
 	}
 }
