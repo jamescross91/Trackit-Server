@@ -26,13 +26,14 @@ public class ConvexDeleteResource extends ServerResource {
 
 		String device_id = form.getFirstValue("device_id");
 		String auth_token = form.getFirstValue("auth_token");
-		long marker_id = Long.parseLong(form.getFirstValue("marker_id"));
+		int group_id = Integer.getInteger(form.getFirstValue("group_id"));
 
 		Device thisDevice = new Device(device_id);
 		thisDevice.loadDevice();
 		if (thisDevice.authenticateToken(auth_token)) {
-			RadialGeofenceHandler handler = new RadialGeofenceHandler(marker_id);
-			if (!handler.deletePoint()) {
+			ConvexHullHandler handler = new ConvexHullHandler(device_id);
+			handler.setGroupID(group_id);
+			if (!handler.deletePoints()) {
 				result = new JsonRepresentation(getErrorObj());
 			}
 			result = new JsonRepresentation(getSuccessObj());

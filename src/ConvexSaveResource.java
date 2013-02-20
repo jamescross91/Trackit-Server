@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.restlet.data.Form;
+import org.restlet.data.Parameter;
 import org.restlet.ext.json.JsonRepresentation;
 import org.restlet.representation.Representation;
 import org.restlet.resource.Get;
@@ -29,25 +30,30 @@ public class ConvexSaveResource extends ServerResource {
 		Representation result = null;
 		Form form = new Form(entity);
 
-		String device_id = form.getFirstValue("device_id");
-		String auth_token = form.getFirstValue("auth_token");
-		String group_id = form.getFirstValue("group_id");
+		Parameter param = form.get(0);
+		String first = param.getFirst();
+		JSONObject object;
 
-		Device thisDevice = new Device(device_id);
-		thisDevice.loadDevice();
-		if (thisDevice.authenticateToken(auth_token)) {
+		try {
+			object = new JSONObject(first);
 
-			JSONObject object;
-			try {
-				object = new JSONObject(form.getFirstValue(group_id));
-				HashMap<String, ConvexHullPoint> pointList = unwrapJson(object);
+			String device_id = object.getString("device_id");
+			String auth_token = object.getString("auth_token");
+			String group_id = object.getString("group_id");
+
+			Device thisDevice = new Device(device_id);
+			thisDevice.loadDevice();
+			if (thisDevice.authenticateToken(auth_token)) {
+
+				JSONObject groupObject = object.getJSONObject(group_id);
+				HashMap<String, ConvexHullPoint> pointList = unwrapJson(groupObject);
 
 				ConvexHullHandler handler = new ConvexHullHandler(
-						Integer.getInteger(group_id), pointList, thisDevice.parent_username);
-				
+						Integer.valueOf(group_id), pointList,
+						thisDevice.parent_username);
+
 				handler.savePoints();
-				
-				
+
 				// Recompute the location alerts
 				ArrayList<Device> devices = loadParentsChildren(device_id);
 				for (int i = 0; i < devices.size(); i++) {
@@ -57,15 +63,14 @@ public class ConvexSaveResource extends ServerResource {
 					thisManager.setLocation(latestLoc);
 					thisManager.processAlerts();
 				}
-
-				result = new JsonRepresentation(handler.toJson());
-			} catch (JSONException e) {
+			} else
 				result = new JsonRepresentation(getErrorObj());
-				e.printStackTrace();
-			}
 
-		} else
+			// result = new JsonRepresentation(handler.toJson());
+		} catch (JSONException e) {
 			result = new JsonRepresentation(getErrorObj());
+			e.printStackTrace();
+		}
 
 		return (result);
 	}
