@@ -45,6 +45,8 @@ public class ConvexSaveResource extends ServerResource {
 				ConvexHullHandler handler = new ConvexHullHandler(
 						Integer.getInteger(group_id), pointList, thisDevice.parent_username);
 				
+				handler.savePoints();
+				
 				
 				// Recompute the location alerts
 				ArrayList<Device> devices = loadParentsChildren(device_id);
