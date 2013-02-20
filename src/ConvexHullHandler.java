@@ -1,5 +1,6 @@
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
@@ -24,9 +25,65 @@ public class ConvexHullHandler implements Jsonifiable {
 	public ConvexHullHandler(String device_id) {
 		this.device_id = device_id;
 	}
+	
+	public boolean deletePoints(){
+		
+		LinkedHashMap<String, Object> data = new LinkedHashMap<String, Object>();
+		String sqlString = "DELETE FROM convex_geofences WHERE group_id = ?";
+		String sqlString2 = "DELETE FROM convex_details WHERE group_id = ?";
+		String sqlString3 = "DELETE FROM convex_groups WHERE group_id = ?";
+
+		data.put("group_id", group_id);
+
+		try {
+			DatabaseCore.executeSqlUpdate(sqlString, data);
+			DatabaseCore.executeSqlUpdate(sqlString2, data);
+			DatabaseCore.executeSqlUpdate(sqlString3, data);
+		} catch (Exception e) {
+			logger.error("Error inserting radial geofence into the database for username: "
+					+ parent_username);
+			e.printStackTrace();
+			return false;
+		}
+
+		return true;
+	}
 
 	public HashMap<String, ConvexHullPoint> loadPoints() {
 
+		HashMap<String, ConvexHullPoint> group = new HashMap<String, ConvexHullPoint>();
+		List<HashMap<String, Object>> result = null;
+
+		String sqlString = "SELECT * FROM convex_geofences WHERE group_id = ? AND parent_username = ?";
+		LinkedHashMap<String, Object> data = new LinkedHashMap<String, Object>();
+		data.put("group_id", group_id);
+		data.put("parent_username", parent_username);
+
+		try {
+			result = DatabaseCore.executeSqlQuery(sqlString, data);
+		} catch (Exception e) {
+			logger.error("Error extracting convex geofences from the database, group_if is: "
+					+ group_id);
+			e.printStackTrace();
+		}
+
+		if (result.size() == 0) {
+			logger.error("No groups found for group id: " + group_id);
+			return null;
+		}
+
+		for (int i = 0; i < result.size(); i++) {
+			HashMap<String, Object> thisMarker = result.get(i);
+
+			long marker_id = (Long) thisMarker.get("marker_id");
+			double lat = (double) thisMarker.get("latitude");
+			double lng = (double) thisMarker.get("longitude");
+
+			ConvexHullPoint thisPoint = new ConvexHullPoint(lat, lng, marker_id);
+			group.put(String.valueOf(marker_id), thisPoint);
+		}
+			
+		return group;
 	}
 
 	public HashMap<String, ConvexHullPoint> savePoints() {
@@ -127,6 +184,14 @@ public class ConvexHullHandler implements Jsonifiable {
 		}
 
 		return (int) key;
+	}
+
+	public void setGroupID(int group_id) {
+		this.group_id = group_id;
+	}
+
+	public void setParentUsername(String parent_username) {
+		this.parent_username = parent_username;
 	}
 
 	@Override

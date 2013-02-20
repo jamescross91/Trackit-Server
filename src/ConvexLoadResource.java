@@ -30,6 +30,7 @@ public class ConvexLoadResource extends ServerResource {
 
 		String device_id = form.getFirstValue("device_id");
 		String auth_token = form.getFirstValue("auth_token");
+		int group_id = Integer.getInteger(form.getFirstValue("group_id"));
 
 		Device thisDevice = new Device(device_id);
 		thisDevice.loadDevice();
