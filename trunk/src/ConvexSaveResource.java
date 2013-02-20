@@ -37,22 +37,31 @@ public class ConvexSaveResource extends ServerResource {
 		thisDevice.loadDevice();
 		if (thisDevice.authenticateToken(auth_token)) {
 
-			JSONObject object = new JSONObject(form.getFirstValue(group_id));
-			HashMap<String, ConvexHullPoint> pointList = unwrapJson(object);
+			JSONObject object;
+			try {
+				object = new JSONObject(form.getFirstValue(group_id));
+				HashMap<String, ConvexHullPoint> pointList = unwrapJson(object);
 
-			ConvexHullHandler handler = new ConvexHullHandler(Long.getLong(group_id), pointList);
-			
-			// Recompute the location alerts
-			ArrayList<Device> devices = loadParentsChildren(device_id);
-			for (int i = 0; i < devices.size(); i++) {
-				AlertsManager thisManager = new AlertsManager();
-				DeviceLocation latestLoc = new DeviceLocation();
-				latestLoc.loadLatest(devices.get(i).device_id);
-				thisManager.setLocation(latestLoc);
-				thisManager.processAlerts();
+				ConvexHullHandler handler = new ConvexHullHandler(
+						Integer.getInteger(group_id), pointList, thisDevice.parent_username);
+				
+				
+				// Recompute the location alerts
+				ArrayList<Device> devices = loadParentsChildren(device_id);
+				for (int i = 0; i < devices.size(); i++) {
+					AlertsManager thisManager = new AlertsManager();
+					DeviceLocation latestLoc = new DeviceLocation();
+					latestLoc.loadLatest(devices.get(i).device_id);
+					thisManager.setLocation(latestLoc);
+					thisManager.processAlerts();
+				}
+
+				result = new JsonRepresentation(handler.toJson());
+			} catch (JSONException e) {
+				result = new JsonRepresentation(getErrorObj());
+				e.printStackTrace();
 			}
 
-			result = new JsonRepresentation(handler.toJson());
 		} else
 			result = new JsonRepresentation(getErrorObj());
 
@@ -67,19 +76,20 @@ public class ConvexSaveResource extends ServerResource {
 			try {
 				String key = (String) keys.next();
 				JSONObject thisObject = (JSONObject) object.get(key);
-				
+
 				double latitude = thisObject.getDouble("latitude");
 				double longitude = thisObject.getDouble("longitude");
 				long marker_id = thisObject.getLong("marker_id");
 
-				ConvexHullPoint thisPoint = new ConvexHullPoint(latitude, longitude, marker_id);
+				ConvexHullPoint thisPoint = new ConvexHullPoint(latitude,
+						longitude, marker_id);
 				points.put(Long.toString(marker_id), thisPoint);
 
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
-		
+
 		return points;
 	}
 
