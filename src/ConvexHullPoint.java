@@ -5,11 +5,14 @@ public class ConvexHullPoint implements Jsonifiable{
 	private double latitude;
 	private double longitude;
 	private long marker_id;
+	private long old_marker_id = 1;
+	private String nice_name;
 
-	public ConvexHullPoint(double latitude, double longitude, long marker_id) {
+	public ConvexHullPoint(double latitude, double longitude, long marker_id, String nice_name) {
 		this.latitude = latitude;
 		this.longitude = longitude;
 		this.marker_id = marker_id;
+		this.setNice_name(nice_name);
 	}
 
 	public double getLatitude() {
@@ -49,5 +52,21 @@ public class ConvexHullPoint implements Jsonifiable{
 		}
 		
 		return object;
+	}
+
+	public long getOld_marker_id() {
+		return old_marker_id;
+	}
+
+	public void setOld_marker_id(long old_marker_id) {
+		this.old_marker_id = old_marker_id;
+	}
+
+	public String getNice_name() {
+		return nice_name;
+	}
+
+	public void setNice_name(String nice_name) {
+		this.nice_name = nice_name;
 	}
 }
