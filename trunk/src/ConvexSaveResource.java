@@ -79,8 +79,8 @@ public class ConvexSaveResource extends ServerResource {
 
 	private HashMap<String, ConvexHullPoint> unwrapJson(JSONObject object) {
 		HashMap<String, ConvexHullPoint> points = new HashMap<String, ConvexHullPoint>();
-		String nice_name;
-		
+		String nice_name = null;
+
 		Iterator<?> keys = object.keys();
 		while (keys.hasNext()) {
 			try {
@@ -91,10 +91,8 @@ public class ConvexSaveResource extends ServerResource {
 				double longitude = thisObject.getDouble("longitude");
 				long marker_id = thisObject.getLong("marker_id");
 
-				if (thisObject.has("nice_name")) {
+				if (thisObject.has("nice_name") && nice_name == null) {
 					nice_name = thisObject.getString("nice_name");
-				} else {
-					nice_name = "";
 				}
 				ConvexHullPoint thisPoint = new ConvexHullPoint(latitude,
 						longitude, marker_id, nice_name);
