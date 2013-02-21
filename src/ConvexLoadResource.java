@@ -21,19 +21,18 @@ public class ConvexLoadResource extends ServerResource {
 
 	@Post
 	public Representation acceptItem(Representation entity) {
-		System.out.println("Device attempting to log in");
+		System.out.println("Device attempting to load convex geofences");
 		Representation result = null;
 		Form form = new Form(entity);
 
 		String device_id = form.getFirstValue("device_id");
 		String auth_token = form.getFirstValue("auth_token");
-		int group_id = Integer.getInteger(form.getFirstValue("group_id"));
 
 		Device thisDevice = new Device(device_id);
 		thisDevice.loadDevice();
 		if (thisDevice.authenticateToken(auth_token)) {
 			ConvexHullHandler handler = new ConvexHullHandler(device_id);
-			handler.setGroupID(group_id);
+			//handler.setGroupID(group_id);
 			handler.setParentUsername(thisDevice.parent_username);
 			
 			HashMap<String, ConvexHullPoint> group = new HashMap<String, ConvexHullPoint>();
@@ -57,6 +56,7 @@ public class ConvexLoadResource extends ServerResource {
 			result = new JsonRepresentation(getErrorObj());
 		}
 
+		result = new JsonRepresentation(getErrorObj());
 		return (result);
 	}
 
