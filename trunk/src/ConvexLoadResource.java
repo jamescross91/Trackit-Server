@@ -1,4 +1,5 @@
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
 import org.json.JSONException;
@@ -32,21 +33,31 @@ public class ConvexLoadResource extends ServerResource {
 		thisDevice.loadDevice();
 		if (thisDevice.authenticateToken(auth_token)) {
 			ConvexHullHandler handler = new ConvexHullHandler(device_id);
-			//handler.setGroupID(group_id);
 			handler.setParentUsername(thisDevice.parent_username);
-			
-			HashMap<String, ConvexHullPoint> group = new HashMap<String, ConvexHullPoint>();
-			group = handler.loadPoints();
-			
-			JSONObject object = new JSONObject();
+
+			// This is a flattened list of all points for this parent username
+			HashMap<String, ConvexHullPoint> groups = new HashMap<String, ConvexHullPoint>();
+			groups = handler.loadPoints();
+
+			HashMap<String, HashMap<String, ConvexHullPoint>> convexMarkerLists = unflatten(groups);
+
+			JSONObject groupList = new JSONObject();
 			try {
-				for (int i = 0; i < group.size(); i++) {
-					ConvexHullPoint point = group.get(i);
+				for(Entry<String, HashMap<String, ConvexHullPoint>> groupEntry : convexMarkerLists.entrySet()){
+					JSONObject thisGroup = new JSONObject();
+					String group_id = groupEntry.getKey();
+					HashMap<String, ConvexHullPoint> group = groupEntry.getValue();
 					
-					object.putOnce(String.valueOf(point.getMarker_id()),
-							point.toJson());
+					for(Entry<String, ConvexHullPoint> markerEntry : group.entrySet()){
+						String marker_id = markerEntry.getKey();
+						ConvexHullPoint thisPoint = markerEntry.getValue();
+						thisGroup.putOnce(marker_id, thisPoint.toJson());
+					}
+					
+					groupList.putOnce(group_id, thisGroup);
 				}
-				result = new JsonRepresentation(object);
+				
+				result = new JsonRepresentation(groupList);
 			} catch (JSONException e) {
 				logger.error("An exception occured while trying to Jsonify the convex geofence markers");
 				result = new JsonRepresentation(getErrorObj());
@@ -58,6 +69,36 @@ public class ConvexLoadResource extends ServerResource {
 
 		result = new JsonRepresentation(getErrorObj());
 		return (result);
+	}
+
+	private HashMap<String, HashMap<String, ConvexHullPoint>> unflatten(
+			HashMap<String, ConvexHullPoint> list) {
+
+		HashMap<String, HashMap<String, ConvexHullPoint>> convexMarkerLists = new HashMap<String, HashMap<String, ConvexHullPoint>>();
+		
+		for (Entry<String, ConvexHullPoint> entry : list.entrySet()) {
+			ConvexHullPoint thisPoint = entry.getValue();
+
+			// Have we already started creating a list for this group of points?
+			if (convexMarkerLists.containsKey(String.valueOf(thisPoint
+					.getGroup_id()))) {
+				HashMap<String, ConvexHullPoint> groupList = convexMarkerLists
+						.get(String.valueOf(thisPoint.getGroup_id()));
+
+				// If we have then add this point to that list
+				groupList.put(String.valueOf(thisPoint.getMarker_id()),
+						thisPoint);
+			} else {
+				// Otherwise make a new sublist
+				HashMap<String, ConvexHullPoint> groupList = new HashMap<String, ConvexHullPoint>();
+				groupList.put(String.valueOf(thisPoint.getMarker_id()),
+						thisPoint);
+				convexMarkerLists.put(String.valueOf(thisPoint.getGroup_id()),
+						groupList);
+			}
+		}
+
+		return convexMarkerLists;
 	}
 
 	private JSONObject getErrorObj() {
