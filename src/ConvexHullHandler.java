@@ -55,10 +55,9 @@ public class ConvexHullHandler implements Jsonifiable {
 		HashMap<String, ConvexHullPoint> group = new HashMap<String, ConvexHullPoint>();
 		List<HashMap<String, Object>> result = null;
 
-		String sqlString = "SELECT * FROM convex_geofences WHERE group_id = ? AND parent_username = ?";
+		String sqlString = "SELECT * FROM convex_geofences WHERE parent_username = ?";
 		LinkedHashMap<String, Object> data = new LinkedHashMap<String, Object>();
 		data.put("group_id", group_id);
-		data.put("parent_username", parent_username);
 
 		try {
 			result = DatabaseCore.executeSqlQuery(sqlString, data);
@@ -81,8 +80,10 @@ public class ConvexHullHandler implements Jsonifiable {
 			long marker_id = (Long) thisMarker.get("marker_id");
 			double lat = (double) thisMarker.get("latitude");
 			double lng = (double) thisMarker.get("longitude");
+			int group_id = (int) thisMarker.get("group_id");
 
 			ConvexHullPoint thisPoint = new ConvexHullPoint(lat, lng, marker_id, niceName);
+			thisPoint.setGroup_id(group_id);
 			group.put(String.valueOf(marker_id), thisPoint);
 		}
 

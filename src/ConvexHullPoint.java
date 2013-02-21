@@ -7,6 +7,7 @@ public class ConvexHullPoint implements Jsonifiable{
 	private long marker_id;
 	private long old_marker_id = 1;
 	private String nice_name;
+	private int group_id;
 
 	public ConvexHullPoint(double latitude, double longitude, long marker_id, String nice_name) {
 		this.latitude = latitude;
@@ -68,5 +69,13 @@ public class ConvexHullPoint implements Jsonifiable{
 
 	public void setNice_name(String nice_name) {
 		this.nice_name = nice_name;
+	}
+
+	public int getGroup_id() {
+		return group_id;
+	}
+
+	public void setGroup_id(int group_id) {
+		this.group_id = group_id;
 	}
 }
