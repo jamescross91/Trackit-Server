@@ -67,7 +67,6 @@ public class ConvexLoadResource extends ServerResource {
 			result = new JsonRepresentation(getErrorObj());
 		}
 
-		result = new JsonRepresentation(getErrorObj());
 		return (result);
 	}
 
