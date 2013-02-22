@@ -1,3 +1,5 @@
+import java.awt.geom.Point2D;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -6,6 +8,8 @@ import java.util.Map.Entry;
 import org.apache.log4j.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.jhlabs.map.proj.MercatorProjection;
 
 public class ConvexHullHandler implements Jsonifiable {
 	private int group_id;
@@ -26,15 +30,54 @@ public class ConvexHullHandler implements Jsonifiable {
 	public ConvexHullHandler(String device_id) {
 		this.device_id = device_id;
 	}
-	
-	private boolean existsInPolygon(DeviceLocation location) {
-		// Uses the Haversine formula
-		double sourceLat = location.getLatitude();
-		double sourceLng = location.getLongitude();
 
-		
-		
-		return false;
+	private boolean existsInPolygon(DeviceLocation location) {
+
+		// Get a projection
+		MercatorProjection projection = new MercatorProjection();
+
+		// Project the devices latitude and longitude into cartesian space
+		Point2D.Double cartesianDeviceLoc = projection.project(
+				location.getLongitude(), location.getLatitude(),
+				new Point2D.Double());
+
+		// Compute the convex hull of points - this ensures outliers are removed
+		// and the list is correctly sorted
+		ConvexHull hullWorker = new ConvexHull();
+		ArrayList<ConvexHullPoint> hull = hullWorker
+				.computeDCHull(new ArrayList<ConvexHullPoint>(pointList
+						.values()));
+
+		int nextPointIndex = 0;
+		boolean cross = false;
+		for (int i = 0; i < hull.size(); i++) {
+			nextPointIndex = i + 1;
+
+			// Load points
+			ConvexHullPoint point = hull.get(i);
+			ConvexHullPoint nextPoint = hull.get(nextPointIndex);
+
+			// Does the test point exist within the vertical scope of the edge
+			// we are testing? IE if we drew horizontal lines of infinite length
+			// cross the current and next vertices creating a vertical scope,
+			// does the test point exist within it?
+			boolean edgeScope = ((point.getCartesianY() > cartesianDeviceLoc.y) != (nextPoint
+					.getCartesianY() > cartesianDeviceLoc.y));
+
+			// If the edge was infinite in length would the line through the
+			// test point intersect with it?
+			boolean lineCross = (cartesianDeviceLoc.x < (((nextPoint
+					.getCartesianX() - point.getCartesianX()) * (cartesianDeviceLoc.y - point
+					.getCartesianY())) / ((nextPoint.getCartesianY() - point
+					.getCartesianY()) + point.getCartesianX())));
+			
+			//If there is an intersection, invert the flag
+			if( edgeScope && lineCross){
+				cross = !cross;
+			}
+		}
+
+		return cross;
 	}
 
 	public boolean deletePoints() {
@@ -81,7 +124,7 @@ public class ConvexHullHandler implements Jsonifiable {
 			logger.error("No groups found for group id: " + group_id);
 			return null;
 		}
-		
+
 		for (int i = 0; i < result.size(); i++) {
 			HashMap<String, Object> thisMarker = result.get(i);
 
@@ -91,7 +134,8 @@ public class ConvexHullHandler implements Jsonifiable {
 			int group_id = (int) thisMarker.get("group_id");
 
 			String niceName = getNiceName(group_id, parent_username);
-			ConvexHullPoint thisPoint = new ConvexHullPoint(lat, lng, marker_id, niceName);
+			ConvexHullPoint thisPoint = new ConvexHullPoint(lat, lng,
+					marker_id, niceName);
 			thisPoint.setGroup_id(group_id);
 			group.put(String.valueOf(marker_id), thisPoint);
 		}
@@ -125,8 +169,8 @@ public class ConvexHullHandler implements Jsonifiable {
 
 		return niceName;
 	}
-	
-	private void setNiceName(int group_id, String nice_name){
+
+	private void setNiceName(int group_id, String nice_name) {
 		String sqlString = "UPDATE convex_groups SET nice_name=? WHERE group_id = ?";
 		LinkedHashMap<String, Object> data = new LinkedHashMap<String, Object>();
 		data.put("nice_name", nice_name);
@@ -135,8 +179,7 @@ public class ConvexHullHandler implements Jsonifiable {
 		try {
 			DatabaseCore.executeSqlUpdate(sqlString, data);
 		} catch (Exception e) {
-			logger.error("Unable to update nice name for group id "
-					+ group_id);
+			logger.error("Unable to update nice name for group id " + group_id);
 			e.printStackTrace();
 		}
 	}
@@ -144,7 +187,7 @@ public class ConvexHullHandler implements Jsonifiable {
 	public HashMap<String, ConvexHullPoint> savePoints() {
 		HashMap<String, ConvexHullPoint> updatedList = new HashMap<String, ConvexHullPoint>();
 		String niceName = "";
-		
+
 		if (group_id == NEVER_SAVED) {
 			// Create a new group of markers
 			group_id = createGroup(parent_username);
@@ -158,7 +201,7 @@ public class ConvexHullHandler implements Jsonifiable {
 			if (marker_id < 0) {
 				thisPoint.setOld_marker_id(Long.valueOf(entry.getKey()));
 			}
-			
+
 			niceName = thisPoint.getNice_name();
 
 			thisPoint.setMarker_id(saveMarker(marker_id, group_id,
@@ -180,7 +223,7 @@ public class ConvexHullHandler implements Jsonifiable {
 		}
 
 		setNiceName(group_id, niceName);
-		
+
 		return pointList;
 	}
 
