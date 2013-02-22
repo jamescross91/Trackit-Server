@@ -121,7 +121,6 @@ public class AlertsManager {
 		}
 	}
 
-	@SuppressWarnings({ "unchecked", "unused" })
 	private void loadParents() {
 		List<HashMap<String, Object>> result = null;
 		String sqlString = "SELECT * FROM device_details WHERE parent_username = ? AND is_child = 0";
