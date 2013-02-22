@@ -26,6 +26,16 @@ public class ConvexHullHandler implements Jsonifiable {
 	public ConvexHullHandler(String device_id) {
 		this.device_id = device_id;
 	}
+	
+	private boolean existsInPolygon(DeviceLocation location) {
+		// Uses the Haversine formula
+		double sourceLat = location.getLatitude();
+		double sourceLng = location.getLongitude();
+
+		
+		
+		return false;
+	}
 
 	public boolean deletePoints() {
 
@@ -72,16 +82,15 @@ public class ConvexHullHandler implements Jsonifiable {
 			return null;
 		}
 		
-		String niceName = getNiceName(group_id, parent_username);
-
 		for (int i = 0; i < result.size(); i++) {
 			HashMap<String, Object> thisMarker = result.get(i);
 
-			long marker_id = (Long) thisMarker.get("marker_id");
+			long marker_id = (int) thisMarker.get("marker_id");
 			double lat = (double) thisMarker.get("latitude");
 			double lng = (double) thisMarker.get("longitude");
 			int group_id = (int) thisMarker.get("group_id");
 
+			String niceName = getNiceName(group_id, parent_username);
 			ConvexHullPoint thisPoint = new ConvexHullPoint(lat, lng, marker_id, niceName);
 			thisPoint.setGroup_id(group_id);
 			group.put(String.valueOf(marker_id), thisPoint);

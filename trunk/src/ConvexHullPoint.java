@@ -48,6 +48,7 @@ public class ConvexHullPoint implements Jsonifiable{
 			object.put("lng", this.longitude);
 			object.put("marker_id", this.marker_id);
 			object.put("lat", this.latitude);
+			object.put("nicename", this.nice_name);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

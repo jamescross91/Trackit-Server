@@ -1,7 +1,10 @@
 import java.util.LinkedHashMap;
 
 import org.apache.log4j.Logger;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.restlet.data.Form;
+import org.restlet.ext.json.JsonRepresentation;
 import org.restlet.representation.Representation;
 import org.restlet.resource.Get;
 import org.restlet.resource.Post;
@@ -40,10 +43,22 @@ public class GCMTokenUpdateResource extends ServerResource {
 			} catch (Exception e) {
 				logger.error("Error updating devices GCM token, device id: " + device_id);
 				e.printStackTrace();
+				return new JsonRepresentation(getErrorObj());
 			}
 			return null;
 		}
 		
-		return null;
+		return new JsonRepresentation(getErrorObj());
+	}
+	
+	private JSONObject getErrorObj() {
+		JSONObject object = new JSONObject();
+		try {
+			object.put("failure", "Device did not authenticate");
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		return object;
 	}
 }
