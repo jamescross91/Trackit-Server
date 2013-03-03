@@ -27,8 +27,85 @@ public class ConvexHullHandler implements Jsonifiable {
 		this.parent_username = parent_username;
 	}
 
-	public ConvexHullHandler(String device_id) {
-		this.device_id = device_id;
+	public ConvexHullHandler(String parent_username) {
+		this.parent_username = parent_username;
+	}
+
+	public String requiresAlert(DeviceLocation location, Device device) {
+		String alertString;
+		logger.info("Checking device: " + device.model
+				+ " against current convex geofence");
+
+		if (hullDetailsExist(device)) {
+			// Details already exists for this device and marker
+			// Check if we are inside or outside of the geofence
+			if (existsInPolygon(location)) {
+				// We are inside the geofence
+				// Check if we were inside it or outside it before
+				if (getIsInside(device)) {
+					// But we were already inside it before
+					logger.info("Device already inside the geofence, no change");
+					return null;
+				} else {
+					// We were outside it before
+					alertString = device.model
+							+ " has now moved inside your Geofence";
+
+					// Update the database accordingly
+					updateHullDetails(device, false, true);
+					logger.info("Device has moved inside the geofence");
+					return alertString;
+				}
+			}
+
+			else {
+				// Details exist for this device and marker, but we are outside
+				// the geofence
+				if (getIsInside(device)) {
+					// But we were inside it before
+					alertString = device.model
+							+ " has now moved outside of your Geofence";
+
+					// Update the database accordingly
+					logger.info("Device has moved outside the geofence");
+					updateHullDetails(device, false, false);
+
+					return alertString;
+				}
+
+				else {
+					// We were already outside it before!
+					logger.info("Device already outside the geofence, no change");
+					return null;
+				}
+			}
+
+		} else {
+			// This is the first check for this device and marker
+
+			// Are we inside the defined radius?
+			if (existsInPolygon(location)) {
+				// If yes and there were no previous details for this device and
+				// marker, assume we were outside the radius before
+
+				// Update the database accordingly
+				updateHullDetails(device, true, true);
+
+				alertString = device.model
+						+ " has now moved inside your Geofence";
+				logger.info("Device has moved inside the geofence");
+				return alertString;
+
+			} else {
+				// There are no details for the marker/device, and we are
+				// outside the circle so set this in the database
+				updateHullDetails(device, true, false);
+				logger.info("Device already outside the geofence, no change");
+				// No alert is required
+				return null;
+			}
+
+		}
 	}
 
 	private boolean existsInPolygon(DeviceLocation location) {
@@ -70,14 +147,97 @@ public class ConvexHullHandler implements Jsonifiable {
 					.getCartesianX() - point.getCartesianX()) * (cartesianDeviceLoc.y - point
 					.getCartesianY())) / ((nextPoint.getCartesianY() - point
 					.getCartesianY()) + point.getCartesianX())));
-			
-			//If there is an intersection, invert the flag
-			if( edgeScope && lineCross){
+
+			// If there is an intersection, invert the flag
+			if (edgeScope && lineCross) {
 				cross = !cross;
 			}
 		}
 
 		return cross;
+	}
+
+	private boolean hullDetailsExist(Device device) {
+
+		LinkedHashMap<String, Object> data = new LinkedHashMap<String, Object>();
+		List<HashMap<String, Object>> result;
+
+		if (group_id != NEVER_SAVED) {
+			String sqlString = "SELECT * FROM convex_details WHERE device_id = ? AND group_id = ?";
+
+			data.put("device_id", device.device_id);
+			data.put("group_id", (int) group_id);
+			try {
+				result = DatabaseCore.executeSqlQuery(sqlString, data);
+				if (result.size() > 0)
+					return true;
+				else
+					return false;
+			} catch (Exception e) {
+				logger.error("Error inserting convex geofence details into the database for username: "
+						+ parent_username);
+				e.printStackTrace();
+			}
+		}
+
+		return false;
+	}
+
+	private boolean getIsInside(Device device) {
+		LinkedHashMap<String, Object> data = new LinkedHashMap<String, Object>();
+		List<HashMap<String, Object>> result = null;
+
+		String sqlString = "SELECT * FROM convex_details WHERE device_id = ? AND group_id = ?";
+
+		data.put("device_id", device.device_id);
+		data.put("group_id", (int) group_id);
+		try {
+			result = DatabaseCore.executeSqlQuery(sqlString, data);
+
+		} catch (Exception e) {
+			logger.error("Error extracting convex geofence details for marker: "
+					+ group_id);
+			e.printStackTrace();
+		}
+
+		if (result.size() != 1) {
+			logger.error("Error attempting to extract convex details for marker_id "
+					+ group_id
+					+ " the incorrect number of results was returned!");
+			return false;
+		}
+
+		HashMap<String, Object> thisMarker = result.get(0);
+		return (boolean) thisMarker.get("is_inside");
+	}
+
+	private boolean updateHullDetails(Device device, boolean initialInsert,
+			boolean is_inside) {
+		LinkedHashMap<String, Object> data = new LinkedHashMap<String, Object>();
+		long key = -1;
+		String sqlString;
+
+		if (initialInsert) {
+			sqlString = "INSERT INTO convex_details (device_id, group_id, is_inside) VALUES(?, ?, ?)";
+			data.put("device_id", device.device_id);
+			data.put("group_id", (int) group_id);
+			data.put("is_inside", is_inside);
+		} else {
+			sqlString = "UPDATE convex_details SET is_inside = ? WHERE group_id = ? AND device_id = ?";
+			data.put("is_inside", is_inside);
+			data.put("group_id", (int) group_id);
+			data.put("device_id", device.device_id);
+		}
+
+		try {
+			key = DatabaseCore.executeSqlUpdate(sqlString, data);
+		} catch (Exception e) {
+			logger.error("Error inserting convex geofence detail into the database for username: "
+					+ parent_username);
+			e.printStackTrace();
+			return false;
+		}
+		return true;
 	}
 
 	public boolean deletePoints() {
@@ -94,7 +254,7 @@ public class ConvexHullHandler implements Jsonifiable {
 			DatabaseCore.executeSqlUpdate(sqlString2, data);
 			DatabaseCore.executeSqlUpdate(sqlString3, data);
 		} catch (Exception e) {
-			logger.error("Error inserting radial geofence into the database for username: "
+			logger.error("Error deleting convex geofence from the database for username: "
 					+ parent_username);
 			e.printStackTrace();
 			return false;
@@ -103,14 +263,14 @@ public class ConvexHullHandler implements Jsonifiable {
 		return true;
 	}
 
-	public HashMap<String, ConvexHullPoint> loadPoints() {
+	public HashMap<String, HashMap<String, ConvexHullPoint>> loadPoints() {
 
 		HashMap<String, ConvexHullPoint> group = new HashMap<String, ConvexHullPoint>();
 		List<HashMap<String, Object>> result = null;
 
 		String sqlString = "SELECT * FROM convex_geofences WHERE parent_username = ?";
 		LinkedHashMap<String, Object> data = new LinkedHashMap<String, Object>();
-		data.put("group_id", group_id);
+		data.put("parent_username", parent_username);
 
 		try {
 			result = DatabaseCore.executeSqlQuery(sqlString, data);
@@ -140,7 +300,37 @@ public class ConvexHullHandler implements Jsonifiable {
 			group.put(String.valueOf(marker_id), thisPoint);
 		}
 
-		return group;
+		return unflatten(group);
+	}
+
+	private HashMap<String, HashMap<String, ConvexHullPoint>> unflatten(
+			HashMap<String, ConvexHullPoint> list) {
+
+		HashMap<String, HashMap<String, ConvexHullPoint>> convexMarkerLists = new HashMap<String, HashMap<String, ConvexHullPoint>>();
+
+		for (Entry<String, ConvexHullPoint> entry : list.entrySet()) {
+			ConvexHullPoint thisPoint = entry.getValue();
+
+			// Have we already started creating a list for this group of points?
+			if (convexMarkerLists.containsKey(String.valueOf(thisPoint
+					.getGroup_id()))) {
+				HashMap<String, ConvexHullPoint> groupList = convexMarkerLists
+						.get(String.valueOf(thisPoint.getGroup_id()));
+
+				// If we have then add this point to that list
+				groupList.put(String.valueOf(thisPoint.getMarker_id()),
+						thisPoint);
+			} else {
+				// Otherwise make a new sublist
+				HashMap<String, ConvexHullPoint> groupList = new HashMap<String, ConvexHullPoint>();
+				groupList.put(String.valueOf(thisPoint.getMarker_id()),
+						thisPoint);
+				convexMarkerLists.put(String.valueOf(thisPoint.getGroup_id()),
+						groupList);
+			}
+		}
+
+		return convexMarkerLists;
 	}
 
 	private String getNiceName(int group_id, String parent_username) {
@@ -242,13 +432,13 @@ public class ConvexHullHandler implements Jsonifiable {
 			try {
 				key = DatabaseCore.executeSqlUpdate(sqlString, data);
 			} catch (Exception e) {
-				logger.error("Error inserting radial geofence into the database for username: "
+				logger.error("Error inserting convex geofence into the database for username: "
 						+ parent_username);
 				e.printStackTrace();
 			}
 
 			if (key == -1) {
-				logger.error("Error inserting radial geofence into the database for username: "
+				logger.error("Error inserting convex geofence into the database for username: "
 						+ parent_username);
 			}
 
@@ -263,7 +453,7 @@ public class ConvexHullHandler implements Jsonifiable {
 			try {
 				key = DatabaseCore.executeSqlUpdate(sqlString, data);
 			} catch (Exception e) {
-				logger.error("Unable to update radial geofence for marker id "
+				logger.error("Unable to update convex geofence for marker id "
 						+ marker_id);
 				e.printStackTrace();
 			}

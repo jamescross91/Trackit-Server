@@ -10,6 +10,7 @@ public class AlertsManager {
 	private Device sourceDevice;
 	private ArrayList<Device> parentDevices = new ArrayList<Device>();
 	private ArrayList<RadialGeofenceHandler> points = new ArrayList<RadialGeofenceHandler>();
+	private HashMap<String, HashMap<String, ConvexHullPoint>> convexMarkerLists = new HashMap<String, HashMap<String, ConvexHullPoint>>();
 	private static Logger logger = Logger.getLogger(AlertsManager.class);
 	private long marker_id;
 	
@@ -17,14 +18,16 @@ public class AlertsManager {
 		this.deviceLocation = deviceLocation;
 		sourceDevice = new Device(deviceLocation.getDevice().device_id);
 		sourceDevice.loadDevice();
-		loadPoints();
+		loadRadialPoints();
+		loadConvexPoints();
 	}
 	
 	public void setDevice(Device device){
 		sourceDevice = device;
-		loadPoints();
+		loadRadialPoints();
+		loadConvexPoints();
 	}
-
+	
 	public boolean processAlerts() {
 		loadParents();
 
@@ -62,6 +65,7 @@ public class AlertsManager {
 		case "Android":
 			sendAndroidLocAlert(parentDevice);
 			sendAndroidGeoAlerts(parentDevice);
+			sendAndroidConvexAlerts(parentDevice);
 			break;
 		}
 	}
@@ -79,6 +83,13 @@ public class AlertsManager {
 		notif.setDeviceLocation(deviceLocation);
 		notif.pushMessage();
 	}
+	
+	private void sendAndroidConvexAlerts(Device parentDevice){
+		//Iterate over each group
+		//For each group instatiate the ConvexHullHandler
+		//Check if this location needs an alert
+		//If it does, issue it!
+	}
 
 	private void sendAndroidGeoAlerts(Device parentDevice) {
 		for (int i = 0; i < points.size(); i++) {
@@ -95,7 +106,7 @@ public class AlertsManager {
 		}
 	}
 
-	private void loadPoints() {
+	private void loadRadialPoints() {
 
 		// Load all GeoFences for this parent from the database
 		List<HashMap<String, Object>> result = null;
@@ -119,6 +130,11 @@ public class AlertsManager {
 			marker.loadPoint();
 			points.add(marker);
 		}
+	}
+	
+	private void loadConvexPoints() {
+		ConvexHullHandler handler = new ConvexHullHandler(sourceDevice.parent_username);
+		convexMarkerLists = handler.loadPoints();
 	}
 
 	private void loadParents() {

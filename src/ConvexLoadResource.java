@@ -32,14 +32,12 @@ public class ConvexLoadResource extends ServerResource {
 		Device thisDevice = new Device(device_id);
 		thisDevice.loadDevice();
 		if (thisDevice.authenticateToken(auth_token)) {
-			ConvexHullHandler handler = new ConvexHullHandler(device_id);
-			handler.setParentUsername(thisDevice.parent_username);
+			ConvexHullHandler handler = new ConvexHullHandler(thisDevice.parent_username);
+			
 
 			// This is a flattened list of all points for this parent username
-			HashMap<String, ConvexHullPoint> groups = new HashMap<String, ConvexHullPoint>();
-			groups = handler.loadPoints();
-
-			HashMap<String, HashMap<String, ConvexHullPoint>> convexMarkerLists = unflatten(groups);
+			HashMap<String, HashMap<String, ConvexHullPoint>> convexMarkerLists = new HashMap<String, HashMap<String, ConvexHullPoint>> ();
+			convexMarkerLists = handler.loadPoints();
 
 			JSONObject groupList = new JSONObject();
 			try {
@@ -70,35 +68,7 @@ public class ConvexLoadResource extends ServerResource {
 		return (result);
 	}
 
-	private HashMap<String, HashMap<String, ConvexHullPoint>> unflatten(
-			HashMap<String, ConvexHullPoint> list) {
-
-		HashMap<String, HashMap<String, ConvexHullPoint>> convexMarkerLists = new HashMap<String, HashMap<String, ConvexHullPoint>>();
-		
-		for (Entry<String, ConvexHullPoint> entry : list.entrySet()) {
-			ConvexHullPoint thisPoint = entry.getValue();
-
-			// Have we already started creating a list for this group of points?
-			if (convexMarkerLists.containsKey(String.valueOf(thisPoint
-					.getGroup_id()))) {
-				HashMap<String, ConvexHullPoint> groupList = convexMarkerLists
-						.get(String.valueOf(thisPoint.getGroup_id()));
-
-				// If we have then add this point to that list
-				groupList.put(String.valueOf(thisPoint.getMarker_id()),
-						thisPoint);
-			} else {
-				// Otherwise make a new sublist
-				HashMap<String, ConvexHullPoint> groupList = new HashMap<String, ConvexHullPoint>();
-				groupList.put(String.valueOf(thisPoint.getMarker_id()),
-						thisPoint);
-				convexMarkerLists.put(String.valueOf(thisPoint.getGroup_id()),
-						groupList);
-			}
-		}
-
-		return convexMarkerLists;
-	}
+	
 
 	private JSONObject getErrorObj() {
 		JSONObject object = new JSONObject();

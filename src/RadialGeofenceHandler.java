@@ -270,7 +270,7 @@ public class RadialGeofenceHandler implements Jsonifiable {
 				else
 					return false;
 			} catch (Exception e) {
-				logger.error("Error inserting radial geofence into the database for username: "
+				logger.error("Error checking radial geofence detail or username: "
 						+ parent_username);
 				e.printStackTrace();
 			}
