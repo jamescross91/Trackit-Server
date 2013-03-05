@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+		<div align="center">
+			<img src="/web/images/trackittrans.png" alt="TrackiT Web Management">
+		</div>
+	<br>
+</head>	
+
+<script type="text/javascript">
+	$.ajax({
+		type:"POST",
+		url:"/web/device_load",
+		cache: false,
+		dataType: "html"
+		}).done(
+			function(data) {
+			$('#psdg-middle').html(data);
+		});
+		
+	// W3 Schools getCookie Function
+	function getCookie(c_name)
+	{
+		var i,x,y,ARRcookies=document.cookie.split(";");
+		for (i=0;i<ARRcookies.length;i++)
+		{
+  			x=ARRcookies[i].substr(0,ARRcookies[i].indexOf("="));
+  			y=ARRcookies[i].substr(ARRcookies[i].indexOf("=")+1);
+  			x=x.replace(/^\s+|\s+$/g,"");
+  			if (x==c_name)
+    		{
+    			return unescape(y);
+    		}
+  		}
+	}
+		
+		
+</script>
+	
+<link href="/web/css/style.css" rel="stylesheet" type="text/css" />
+<body>
+	
+	<div align="center">
+		<div id="psdgraphics-com-table">
+
+			<div id="psdg-header">
+				<span class="psdg-bold">Device details</span><br />
+					Device details for your credentials
+			</div>
+
+			<div id="psdg-top">
+				<div class="psdg-top-cell" style="width:129px; text-align:left; padding-left: 24px;">Device ID</div>
+				<div class="psdg-top-cell">Parent Username</div>
+				<div class="psdg-top-cell">Make</div>
+				<div class="psdg-top-cell">Model</div>
+				<div class="psdg-top-cell" style="border:none;">Kick Device</div>
+			</div>
+	
+			<div id="psdg-middle">
+
+			</div>
+
+
+			<div id="psdg-footer">
+				Data loaded from the TrackiT Server
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>
