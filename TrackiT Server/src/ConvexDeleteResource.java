@@ -20,13 +20,13 @@ public class ConvexDeleteResource extends ServerResource {
 
 	@Post
 	public Representation acceptItem(Representation entity) {
-		System.out.println("Device attempting to remove marker");
+		logger.info("Device attempting to remove marker");
 		Representation result = null;
 		Form form = new Form(entity);
 
 		String device_id = form.getFirstValue("device_id");
 		String auth_token = form.getFirstValue("auth_token");
-		int group_id = Integer.getInteger(form.getFirstValue("group_id"));
+		int group_id = Integer.valueOf(form.getFirstValue("group_id"));
 
 		Device thisDevice = new Device(device_id);
 		thisDevice.loadDevice();

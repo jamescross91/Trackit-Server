@@ -202,6 +202,9 @@ public class DeviceLocation implements Jsonifiable{
 			object.put("data_connection", data_connection);
 			object.put("device_id", device.device_id);
 			object.put("velocity", velocity);
+			device.loadDevice();
+			object.put("device_make", device.make);
+			object.put("device_model", device.model);
 		} catch (JSONException e) {
 			logger.error("An exception occured while trying to Jsonify the login result for device id "
 					+ device.device_id);

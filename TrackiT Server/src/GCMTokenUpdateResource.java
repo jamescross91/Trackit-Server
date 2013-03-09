@@ -21,7 +21,7 @@ public class GCMTokenUpdateResource extends ServerResource {
 
 	@Post
 	public Representation acceptItem(Representation entity) {
-		System.out.println("Device attempting to update GCM token");
+		logger.info("Device attempting to update GCM token");
 		Form form = new Form(entity);
 
 		String device_id = form.getFirstValue("device_id");
@@ -45,7 +45,7 @@ public class GCMTokenUpdateResource extends ServerResource {
 				e.printStackTrace();
 				return new JsonRepresentation(getErrorObj());
 			}
-			return null;
+			return new JsonRepresentation(getSucessObj());
 		}
 		
 		return new JsonRepresentation(getErrorObj());
@@ -55,6 +55,17 @@ public class GCMTokenUpdateResource extends ServerResource {
 		JSONObject object = new JSONObject();
 		try {
 			object.put("failure", "Device did not authenticate");
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		return object;
+	}
+	
+	private JSONObject getSucessObj() {
+		JSONObject object = new JSONObject();
+		try {
+			object.put("success", "Updated");
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

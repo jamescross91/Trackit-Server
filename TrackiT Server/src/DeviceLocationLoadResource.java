@@ -21,6 +21,7 @@ public class DeviceLocationLoadResource extends ServerResource {
 
 	@Post
 	public Representation acceptItem(Representation entity) {
+		logger.info("Device attempting to load device location information");
 		Representation result = null;
 		Form form = new Form(entity);
 		String parDevice_id = form.getFirstValue("device_id");
@@ -42,7 +43,7 @@ public class DeviceLocationLoadResource extends ServerResource {
 			DeviceLocation latestLoc = new DeviceLocation();
 			latestLoc.loadLatest(child.device_id);
 			manager.setLocation(latestLoc);
-			manager.processAlerts();
+			manager.pushLocations();
 			
 			//Push to the phone requesting a location update
 			child.requestLocUpdate();

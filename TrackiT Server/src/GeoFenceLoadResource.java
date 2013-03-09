@@ -24,7 +24,7 @@ public class GeoFenceLoadResource extends ServerResource {
 
 	@Post
 	public Representation acceptItem(Representation entity) {
-		System.out.println("Device attempting to load radial geofences");
+		logger.info("Device attempting to load radial geofences");
 		Representation result = null;
 		Form form = new Form(entity);
 

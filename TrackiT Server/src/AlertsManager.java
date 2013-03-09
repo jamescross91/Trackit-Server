@@ -39,6 +39,16 @@ public class AlertsManager {
 		return true;
 	}
 
+	public boolean pushLocations() {
+		loadParents();
+
+		for (int i = 0; i < parentDevices.size(); i++) {
+			processLocationAlerts(parentDevices.get(i));
+		}
+
+		return true;
+	}
+
 	public boolean processGeofenceUpdates() {
 		loadParents();
 
@@ -71,6 +81,14 @@ public class AlertsManager {
 		}
 	}
 
+	private void processLocationAlerts(Device parentDevice) {
+		switch (parentDevice.OS) {
+		case "Android":
+			sendAndroidLocAlert(parentDevice);
+			break;
+		}
+	}
+
 	private void sendGeoChangeAlert(Device parentDevice) {
 		AndroidPushNotification notif = new AndroidPushNotification(
 				AndroidPushNotification.MARKER_UPDATE, parentDevice);
@@ -86,27 +104,31 @@ public class AlertsManager {
 	}
 
 	private void sendAndroidConvexAlerts(Device parentDevice) {
-		// Iterate over each group
+		// Iterate over each group (if we have any)
 		// For each group instatiate the ConvexHullHandler
 		// Check if this location needs an alert
 		// If it does, issue it!
-		for (Entry<String, HashMap<String, ConvexHullPoint>> entry : convexMarkerLists
-				.entrySet()) {
-			// Extract the details and create a handler
-			String group_id = entry.getKey();
-			HashMap<String, ConvexHullPoint> map = entry.getValue();
-			ConvexHullHandler handler = new ConvexHullHandler(
-					Integer.valueOf(group_id), map,
-					parentDevice.parent_username);
+		if (convexMarkerLists != null) {
+			for (Entry<String, HashMap<String, ConvexHullPoint>> entry : convexMarkerLists
+					.entrySet()) {
+				// Extract the details and create a handler
+				String group_id = entry.getKey();
+				HashMap<String, ConvexHullPoint> map = entry.getValue();
+				ConvexHullHandler handler = new ConvexHullHandler(
+						Integer.valueOf(group_id), map,
+						parentDevice.parent_username);
 
-			// Check if an alert is required
-			String alertString = handler.requiresAlert(deviceLocation,
-					sourceDevice);
+				// Check if an alert is required
+				String alertString = handler.requiresAlert(deviceLocation,
+						sourceDevice);
 
-			if (alertString != null) {
-				AndroidPushNotification notif = new AndroidPushNotification(AndroidPushNotification.GEOFENCE_CROSS, parentDevice);
-				notif.setAlertMessage(alertString);
-				notif.pushMessage();
+				if (alertString != null) {
+					AndroidPushNotification notif = new AndroidPushNotification(
+							AndroidPushNotification.GEOFENCE_CROSS,
+							parentDevice);
+					notif.setAlertMessage(alertString);
+					notif.pushMessage();
+				}
 			}
 		}
 	}
