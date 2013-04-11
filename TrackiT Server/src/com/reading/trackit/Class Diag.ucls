@@ -1,0 +1,913 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class-diagram version="1.1.2" icons="true" automaticImage="PNG" always-add-relationships="true" generalizations="true" 
+  realizations="true" associations="true" dependencies="true" nesting-relationships="true">  
+  <class id="1" language="java" name="com.reading.trackit.ConvexDeleteResource" project="TrackiT Server" 
+    file="/TrackiT Server/src/com/reading/trackit/ConvexDeleteResource.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="171" width="235" x="636" y="576"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="2" language="java" name="com.reading.trackit.LocationApplication" project="TrackiT Server" 
+    file="/TrackiT Server/src/com/reading/trackit/LocationApplication.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="99" width="161" x="1840" y="208"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="3" language="java" name="com.reading.trackit.WebDeviceLoaderResource" project="TrackiT Server" 
+    file="/TrackiT Server/src/com/reading/trackit/WebDeviceLoaderResource.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="189" width="251" x="2593" y="1700"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="4" language="java" name="com.reading.trackit.DeviceLocationResource" project="TrackiT Server" 
+    file="/TrackiT Server/src/com/reading/trackit/DeviceLocationResource.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="117" width="235" x="1274" y="347"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="5" language="java" name="com.reading.trackit.GeoFenceSaveResource" project="TrackiT Server" 
+    file="/TrackiT Server/src/com/reading/trackit/GeoFenceSaveResource.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="171" width="251" x="1840" y="347"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <interface id="6" language="java" name="com.reading.trackit.Jsonifiable" project="TrackiT Server" 
+    file="/TrackiT Server/src/com/reading/trackit/Jsonifiable.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="81" width="127" x="745" y="3323"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </interface>  
+  <class id="7" language="java" name="com.reading.trackit.User" project="TrackiT Server" 
+    file="/TrackiT Server/src/com/reading/trackit/User.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="423" width="331" x="2593" y="3323"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="8" language="java" name="com.reading.trackit.ConvexLoadResource" project="TrackiT Server" 
+    file="/TrackiT Server/src/com/reading/trackit/ConvexLoadResource.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="153" width="235" x="305" y="576"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="9" language="java" name="com.reading.trackit.WebResource" project="TrackiT Server" 
+    file="/TrackiT Server/src/com/reading/trackit/WebResource.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="99" width="157" x="3162" y="1700"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="10" language="java" name="com.reading.trackit.WebLoginResource" project="TrackiT Server" 
+    file="/TrackiT Server/src/com/reading/trackit/WebLoginResource.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="207" width="238" x="2884" y="1700"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="11" language="java" name="com.reading.trackit.PushNotification" project="TrackiT Server" 
+    file="/TrackiT Server/src/com/reading/trackit/PushNotification.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="351" width="220" x="1058" y="576"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="12" language="java" name="com.reading.trackit.ConvexHullHandler" project="TrackiT Server" 
+    file="/TrackiT Server/src/com/reading/trackit/ConvexHullHandler.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="477" width="497" x="353" y="1057"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="13" language="java" name="com.reading.trackit.DeviceLocation" project="TrackiT Server" 
+    file="/TrackiT Server/src/com/reading/trackit/DeviceLocation.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="603" width="499" x="953" y="1700"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="14" language="java" name="com.reading.trackit.GCMTokenUpdateResource" project="TrackiT Server" 
+    file="/TrackiT Server/src/com/reading/trackit/GCMTokenUpdateResource.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="171" width="235" x="1980" y="1700"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="15" language="java" name="com.reading.trackit.AlertsManager" project="TrackiT Server" 
+    file="/TrackiT Server/src/com/reading/trackit/AlertsManager.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="441" width="377" x="1318" y="576"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="16" language="java" name="com.reading.trackit.ConvexHullPoint" project="TrackiT Server" 
+    file="/TrackiT Server/src/com/reading/trackit/ConvexHullPoint.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="585" width="232" x="347" y="2343"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="17" language="java" name="com.reading.trackit.ConvexHull" project="TrackiT Server" 
+    file="/TrackiT Server/src/com/reading/trackit/ConvexHull.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="225" width="377" x="347" y="1700"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="18" language="java" name="com.reading.trackit.Launch" project="TrackiT Server" 
+    file="/TrackiT Server/src/com/reading/trackit/Launch.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="99" width="113" x="2884" y="69"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="19" language="java" name="com.reading.trackit.ConvexSaveResource" project="TrackiT Server" 
+    file="/TrackiT Server/src/com/reading/trackit/ConvexSaveResource.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="189" width="321" x="913" y="347"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="20" language="java" name="com.reading.trackit.GeoFenceDeleteResource" project="TrackiT Server" 
+    file="/TrackiT Server/src/com/reading/trackit/GeoFenceDeleteResource.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="171" width="235" x="1882" y="576"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="21" language="java" name="com.reading.trackit.ParentLoginResource" project="TrackiT Server" 
+    file="/TrackiT Server/src/com/reading/trackit/ParentLoginResource.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="117" width="235" x="244" y="347"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="22" language="java" name="com.reading.trackit.AdminConnect" project="TrackiT Server" 
+    file="/TrackiT Server/src/com/reading/trackit/AdminConnect.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="99" width="289" x="1399" y="69"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="23" language="java" name="com.reading.trackit.DeviceLoginResource" project="TrackiT Server" 
+    file="/TrackiT Server/src/com/reading/trackit/DeviceLoginResource.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="117" width="235" x="519" y="347"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="24" language="java" name="com.reading.trackit.WebMapResource" project="TrackiT Server" 
+    file="/TrackiT Server/src/com/reading/trackit/WebMapResource.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="99" width="157" x="3359" y="1700"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="25" language="java" name="com.reading.trackit.ReadProperties" project="TrackiT Server" 
+    file="/TrackiT Server/src/com/reading/trackit/ReadProperties.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="135" width="149" x="1494" y="4015"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="26" language="java" name="com.reading.trackit.DeviceDeleteResource" project="TrackiT Server" 
+    file="/TrackiT Server/src/com/reading/trackit/DeviceDeleteResource.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="171" width="235" x="2297" y="1700"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="27" language="java" name="com.reading.trackit.DatabaseCore" project="TrackiT Server" 
+    file="/TrackiT Server/src/com/reading/trackit/DatabaseCore.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="189" width="450" x="1898" y="3786"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="28" language="java" name="com.reading.trackit.DeviceLogin" project="TrackiT Server" 
+    file="/TrackiT Server/src/com/reading/trackit/DeviceLogin.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="315" width="383" x="341" y="2968"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="29" language="java" name="com.reading.trackit.RadialGeofenceHandler" project="TrackiT Server" 
+    file="/TrackiT Server/src/com/reading/trackit/RadialGeofenceHandler.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="603" width="288" x="1875" y="1057"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="30" language="java" name="com.reading.trackit.GeoFenceLoadResource" project="TrackiT Server" 
+    file="/TrackiT Server/src/com/reading/trackit/GeoFenceLoadResource.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="171" width="290" x="2157" y="576"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="31" language="java" name="com.reading.trackit.WebApplication" project="TrackiT Server" 
+    file="/TrackiT Server/src/com/reading/trackit/WebApplication.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="99" width="161" x="2884" y="1057"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="32" language="java" name="com.reading.trackit.DeviceLocationLoadResource" project="TrackiT Server" 
+    file="/TrackiT Server/src/com/reading/trackit/DeviceLocationLoadResource.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="153" width="251" x="1549" y="347"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="33" language="java" name="com.reading.trackit.Device" project="TrackiT Server" 
+    file="/TrackiT Server/src/com/reading/trackit/Device.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="351" width="190" x="1557" y="2343"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="34" language="java" name="com.reading.trackit.AndroidPushNotification" project="TrackiT Server" 
+    file="/TrackiT Server/src/com/reading/trackit/AndroidPushNotification.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="279" width="196" x="1319" y="1057"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <interface id="35" language="java" name="com.reading.trackit.Pushable" project="TrackiT Server" 
+    file="/TrackiT Server/src/com/reading/trackit/Pushable.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="81" width="133" x="1597" y="1700"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </interface>  
+  <dependency id="36">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="32"/>  
+  </dependency>  
+  <dependency id="37">    
+    <bendpoint x="1434" y="2343"/>    
+    <bendpoint x="1434" y="2968"/>    
+    <bendpoint x="1434" y="3323"/>    
+    <end type="SOURCE" refId="13"/>    
+    <end type="TARGET" refId="27"/>  
+  </dependency>  
+  <dependency id="38">    
+    <end type="SOURCE" refId="19"/>    
+    <end type="TARGET" refId="15"/>  
+  </dependency>  
+  <dependency id="39">    
+    <bendpoint x="838" y="1700"/>    
+    <end type="SOURCE" refId="12"/>    
+    <end type="TARGET" refId="33"/>  
+  </dependency>  
+  <association id="40">    
+    <end type="SOURCE" refId="17" navigable="false">      
+      <attribute id="41" name="Lupper"/>      
+      <multiplicity id="42" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="16" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <dependency id="43">    
+    <bendpoint x="1760" y="1057"/>    
+    <bendpoint x="1823" y="1700"/>    
+    <bendpoint x="1823" y="2343"/>    
+    <bendpoint x="1823" y="2968"/>    
+    <bendpoint x="1823" y="3323"/>    
+    <end type="SOURCE" refId="15"/>    
+    <end type="TARGET" refId="27"/>  
+  </dependency>  
+  <dependency id="44">    
+    <bendpoint x="861" y="347"/>    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="8"/>  
+  </dependency>  
+  <dependency id="45">    
+    <bendpoint x="2498" y="347"/>    
+    <bendpoint x="2498" y="576"/>    
+    <bendpoint x="2435" y="1057"/>    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="14"/>  
+  </dependency>  
+  <realization id="46">    
+    <bendpoint x="775" y="1700"/>    
+    <bendpoint x="775" y="2343"/>    
+    <bendpoint x="775" y="2968"/>    
+    <end type="SOURCE" refId="12"/>    
+    <end type="TARGET" refId="6"/>  
+  </realization>  
+  <dependency id="47">    
+    <end type="SOURCE" refId="15"/>    
+    <end type="TARGET" refId="34"/>  
+  </dependency>  
+  <association id="48">    
+    <bendpoint x="1545" y="1057"/>    
+    <bendpoint x="1545" y="1700"/>    
+    <end type="SOURCE" refId="15" navigable="false">      
+      <attribute id="49" name="parentDevices"/>      
+      <multiplicity id="50" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="33" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <dependency id="51">    
+    <bendpoint x="1767" y="576"/>    
+    <bendpoint x="1823" y="1057"/>    
+    <bendpoint x="1907" y="1700"/>    
+    <bendpoint x="1907" y="2343"/>    
+    <bendpoint x="1907" y="2968"/>    
+    <bendpoint x="1907" y="3323"/>    
+    <end type="SOURCE" refId="19"/>    
+    <end type="TARGET" refId="27"/>  
+  </dependency>  
+  <dependency id="52">    
+    <end type="SOURCE" refId="27"/>    
+    <end type="TARGET" refId="25"/>  
+  </dependency>  
+  <association id="53">    
+    <bendpoint x="1267" y="1057"/>    
+    <end type="SOURCE" refId="15" navigable="false">      
+      <attribute id="54" name="deviceLocation"/>      
+      <multiplicity id="55" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="13" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <dependency id="56">    
+    <bendpoint x="901" y="576"/>    
+    <end type="SOURCE" refId="19"/>    
+    <end type="TARGET" refId="12"/>  
+  </dependency>  
+  <realization id="57">    
+    <bendpoint x="880" y="2343"/>    
+    <bendpoint x="860" y="2968"/>    
+    <end type="SOURCE" refId="13"/>    
+    <end type="TARGET" refId="6"/>  
+  </realization>  
+  <dependency id="58">    
+    <bendpoint x="1830" y="576"/>    
+    <bendpoint x="2214" y="1057"/>    
+    <bendpoint x="2245" y="1700"/>    
+    <bendpoint x="2245" y="2343"/>    
+    <bendpoint x="2245" y="2968"/>    
+    <bendpoint x="2245" y="3323"/>    
+    <end type="SOURCE" refId="32"/>    
+    <end type="TARGET" refId="27"/>  
+  </dependency>  
+  <dependency id="59">    
+    <bendpoint x="1725" y="576"/>    
+    <bendpoint x="1739" y="1057"/>    
+    <bendpoint x="1760" y="1700"/>    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="33"/>  
+  </dependency>  
+  <dependency id="60">    
+    <end type="SOURCE" refId="31"/>    
+    <end type="TARGET" refId="10"/>  
+  </dependency>  
+  <dependency id="61">    
+    <bendpoint x="295" y="1057"/>    
+    <bendpoint x="295" y="1700"/>    
+    <end type="SOURCE" refId="8"/>    
+    <end type="TARGET" refId="16"/>  
+  </dependency>  
+  <dependency id="62">    
+    <bendpoint x="880" y="1057"/>    
+    <bendpoint x="880" y="1700"/>    
+    <end type="SOURCE" refId="8"/>    
+    <end type="TARGET" refId="33"/>  
+  </dependency>  
+  <dependency id="63">    
+    <bendpoint x="1865" y="1700"/>    
+    <end type="SOURCE" refId="29"/>    
+    <end type="TARGET" refId="33"/>  
+  </dependency>  
+  <dependency id="64">    
+    <end type="SOURCE" refId="31"/>    
+    <end type="TARGET" refId="3"/>  
+  </dependency>  
+  <dependency id="65">    
+    <bendpoint x="2193" y="1057"/>    
+    <bendpoint x="1886" y="1700"/>    
+    <end type="SOURCE" refId="30"/>    
+    <end type="TARGET" refId="33"/>  
+  </dependency>  
+  <dependency id="66">    
+    <bendpoint x="714" y="3323"/>    
+    <end type="SOURCE" refId="28"/>    
+    <end type="TARGET" refId="27"/>  
+  </dependency>  
+  <association id="67">    
+    <end type="SOURCE" refId="15" navigable="false">      
+      <attribute id="68" name="points"/>      
+      <multiplicity id="69" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="29" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="70">    
+    <end type="SOURCE" refId="34"/>    
+    <end type="TARGET" refId="11"/>  
+  </generalization>  
+  <association id="71">    
+    <bendpoint x="1048" y="1057"/>    
+    <end type="SOURCE" refId="11" navigable="false">      
+      <attribute id="72" name="deviceLocation"/>      
+      <multiplicity id="73" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="13" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <dependency id="74">    
+    <bendpoint x="1524" y="1700"/>    
+    <end type="SOURCE" refId="33"/>    
+    <end type="TARGET" refId="34"/>  
+  </dependency>  
+  <dependency id="75">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="33"/>  
+  </dependency>  
+  <dependency id="76">    
+    <bendpoint x="2747" y="2343"/>    
+    <bendpoint x="2747" y="2968"/>    
+    <end type="SOURCE" refId="10"/>    
+    <end type="TARGET" refId="7"/>  
+  </dependency>  
+  <dependency id="77">    
+    <end type="SOURCE" refId="30"/>    
+    <end type="TARGET" refId="29"/>  
+  </dependency>  
+  <dependency id="78">    
+    <bendpoint x="1970" y="2343"/>    
+    <bendpoint x="1970" y="2968"/>    
+    <bendpoint x="1970" y="3323"/>    
+    <end type="SOURCE" refId="14"/>    
+    <end type="TARGET" refId="27"/>  
+  </dependency>  
+  <association id="79">    
+    <end type="SOURCE" refId="17" navigable="false">      
+      <attribute id="80" name="convexHull"/>      
+      <multiplicity id="81" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="16" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <dependency id="82">    
+    <bendpoint x="570" y="576"/>    
+    <bendpoint x="322" y="1057"/>    
+    <bendpoint x="316" y="1700"/>    
+    <end type="SOURCE" refId="19"/>    
+    <end type="TARGET" refId="16"/>  
+  </dependency>  
+  <dependency id="83">    
+    <bendpoint x="1027" y="576"/>    
+    <bendpoint x="1027" y="1057"/>    
+    <end type="SOURCE" refId="32"/>    
+    <end type="TARGET" refId="13"/>  
+  </dependency>  
+  <dependency id="84">    
+    <bendpoint x="693" y="3323"/>    
+    <bendpoint x="693" y="3786"/>    
+    <end type="SOURCE" refId="28"/>    
+    <end type="TARGET" refId="25"/>  
+  </dependency>  
+  <association id="85">    
+    <end type="SOURCE" refId="13" navigable="false">      
+      <attribute id="86" name="device"/>      
+      <multiplicity id="87" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="33" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <dependency id="88">    
+    <bendpoint x="2562" y="2343"/>    
+    <bendpoint x="2562" y="2968"/>    
+    <bendpoint x="2562" y="3323"/>    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="27"/>  
+  </dependency>  
+  <dependency id="89">    
+    <bendpoint x="2520" y="2343"/>    
+    <bendpoint x="2520" y="2968"/>    
+    <end type="SOURCE" refId="26"/>    
+    <end type="TARGET" refId="7"/>  
+  </dependency>  
+  <dependency id="90">    
+    <bendpoint x="796" y="1700"/>    
+    <bendpoint x="838" y="2343"/>    
+    <bendpoint x="881" y="2968"/>    
+    <bendpoint x="923" y="3323"/>    
+    <end type="SOURCE" refId="12"/>    
+    <end type="TARGET" refId="27"/>  
+  </dependency>  
+  <dependency id="91">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="12"/>  
+  </dependency>  
+  <dependency id="92">    
+    <bendpoint x="922" y="576"/>    
+    <bendpoint x="922" y="1057"/>    
+    <bendpoint x="922" y="1700"/>    
+    <end type="SOURCE" refId="19"/>    
+    <end type="TARGET" refId="33"/>  
+  </dependency>  
+  <generalization id="93">    
+    <end type="SOURCE" refId="28"/>    
+    <end type="TARGET" refId="33"/>  
+  </generalization>  
+  <dependency id="94">    
+    <end type="SOURCE" refId="8"/>    
+    <end type="TARGET" refId="12"/>  
+  </dependency>  
+  <realization id="95">    
+    <bendpoint x="754" y="2968"/>    
+    <end type="SOURCE" refId="16"/>    
+    <end type="TARGET" refId="6"/>  
+  </realization>  
+  <dependency id="96">    
+    <end type="SOURCE" refId="32"/>    
+    <end type="TARGET" refId="15"/>  
+  </dependency>  
+  <dependency id="97">    
+    <bendpoint x="1503" y="1700"/>    
+    <bendpoint x="1503" y="2343"/>    
+    <bendpoint x="1503" y="2968"/>    
+    <bendpoint x="1503" y="3323"/>    
+    <bendpoint x="1503" y="3786"/>    
+    <end type="SOURCE" refId="34"/>    
+    <end type="TARGET" refId="25"/>  
+  </dependency>  
+  <realization id="98">    
+    <end type="SOURCE" refId="34"/>    
+    <end type="TARGET" refId="35"/>  
+  </realization>  
+  <dependency id="99">    
+    <bendpoint x="1949" y="1700"/>    
+    <bendpoint x="1949" y="2343"/>    
+    <bendpoint x="1949" y="2968"/>    
+    <bendpoint x="1949" y="3323"/>    
+    <end type="SOURCE" refId="29"/>    
+    <end type="TARGET" refId="27"/>  
+  </dependency>  
+  <dependency id="100">    
+    <bendpoint x="964" y="1057"/>    
+    <bendpoint x="817" y="1700"/>    
+    <end type="SOURCE" refId="15"/>    
+    <end type="TARGET" refId="16"/>  
+  </dependency>  
+  <dependency id="101">    
+    <bendpoint x="1844" y="1057"/>    
+    <bendpoint x="1844" y="1700"/>    
+    <end type="SOURCE" refId="20"/>    
+    <end type="TARGET" refId="33"/>  
+  </dependency>  
+  <dependency id="102">    
+    <bendpoint x="1809" y="576"/>    
+    <bendpoint x="1802" y="1057"/>    
+    <bendpoint x="1802" y="1700"/>    
+    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="33"/>  
+  </dependency>  
+  <dependency id="103">    
+    <end type="SOURCE" refId="18"/>    
+    <end type="TARGET" refId="2"/>  
+  </dependency>  
+  <association id="104">    
+    <end type="SOURCE" refId="17" navigable="false">      
+      <attribute id="105" name="Llower"/>      
+      <multiplicity id="106" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="16" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <dependency id="107">    
+    <bendpoint x="2378" y="3786"/>    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="25"/>  
+  </dependency>  
+  <dependency id="108">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="15"/>  
+  </dependency>  
+  <association id="109">    
+    <bendpoint x="1246" y="1057"/>    
+    <bendpoint x="1482" y="1700"/>    
+    <end type="SOURCE" refId="11" navigable="false">      
+      <attribute id="110" name="device"/>      
+      <multiplicity id="111" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="33" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <dependency id="112">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="21"/>  
+  </dependency>  
+  <dependency id="113">    
+    <bendpoint x="253" y="576"/>    
+    <bendpoint x="253" y="1057"/>    
+    <bendpoint x="253" y="1700"/>    
+    <bendpoint x="253" y="2343"/>    
+    <end type="SOURCE" refId="21"/>    
+    <end type="TARGET" refId="28"/>  
+  </dependency>  
+  <realization id="114">    
+    <bendpoint x="1587" y="1057"/>    
+    <end type="SOURCE" refId="11"/>    
+    <end type="TARGET" refId="35"/>  
+  </realization>  
+  <dependency id="115">    
+    <bendpoint x="2893" y="208"/>    
+    <bendpoint x="2893" y="347"/>    
+    <bendpoint x="2893" y="576"/>    
+    <end type="SOURCE" refId="18"/>    
+    <end type="TARGET" refId="31"/>  
+  </dependency>  
+  <dependency id="116">    
+    <end type="SOURCE" refId="20"/>    
+    <end type="TARGET" refId="29"/>  
+  </dependency>  
+  <dependency id="117">    
+    <bendpoint x="1736" y="2968"/>    
+    <bendpoint x="1736" y="3323"/>    
+    <end type="SOURCE" refId="33"/>    
+    <end type="TARGET" refId="27"/>  
+  </dependency>  
+  <dependency id="118">    
+    <bendpoint x="1006" y="576"/>    
+    <bendpoint x="1006" y="1057"/>    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="13"/>  
+  </dependency>  
+  <dependency id="119">    
+    <end type="SOURCE" refId="14"/>    
+    <end type="TARGET" refId="33"/>  
+  </dependency>  
+  <association id="120">    
+    <bendpoint x="1566" y="1057"/>    
+    <bendpoint x="1566" y="1700"/>    
+    <end type="SOURCE" refId="15" navigable="false">      
+      <attribute id="121" name="sourceDevice"/>      
+      <multiplicity id="122" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="33" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <dependency id="123">    
+    <bendpoint x="882" y="347"/>    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="1"/>  
+  </dependency>  
+  <dependency id="124">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="5"/>  
+  </dependency>  
+  <dependency id="125">    
+    <bendpoint x="1851" y="576"/>    
+    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="29"/>  
+  </dependency>  
+  <realization id="126">    
+    <bendpoint x="1928" y="1700"/>    
+    <bendpoint x="1844" y="2343"/>    
+    <bendpoint x="1482" y="2968"/>    
+    <end type="SOURCE" refId="29"/>    
+    <end type="TARGET" refId="6"/>  
+  </realization>  
+  <dependency id="127">    
+    <bendpoint x="274" y="576"/>    
+    <bendpoint x="274" y="1057"/>    
+    <bendpoint x="274" y="1700"/>    
+    <bendpoint x="274" y="2343"/>    
+    <end type="SOURCE" refId="23"/>    
+    <end type="TARGET" refId="28"/>  
+  </dependency>  
+  <dependency id="128">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="4"/>  
+  </dependency>  
+  <dependency id="129">    
+    <bendpoint x="2477" y="576"/>    
+    <bendpoint x="2477" y="1057"/>    
+    <bendpoint x="2266" y="1700"/>    
+    <bendpoint x="2266" y="2343"/>    
+    <bendpoint x="2266" y="2968"/>    
+    <bendpoint x="2266" y="3323"/>    
+    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="27"/>  
+  </dependency>  
+  <dependency id="130">    
+    <bendpoint x="943" y="1057"/>    
+    <bendpoint x="859" y="1700"/>    
+    <bendpoint x="859" y="2343"/>    
+    <bendpoint x="902" y="2968"/>    
+    <bendpoint x="902" y="3323"/>    
+    <bendpoint x="902" y="3786"/>    
+    <end type="SOURCE" refId="11"/>    
+    <end type="TARGET" refId="25"/>  
+  </dependency>  
+  <dependency id="131">    
+    <end type="SOURCE" refId="34"/>    
+    <end type="TARGET" refId="13"/>  
+  </dependency>  
+  <dependency id="132">    
+    <bendpoint x="985" y="576"/>    
+    <bendpoint x="985" y="1057"/>    
+    <end type="SOURCE" refId="19"/>    
+    <end type="TARGET" refId="13"/>  
+  </dependency>  
+  <dependency id="133">    
+    <bendpoint x="2519" y="347"/>    
+    <bendpoint x="2519" y="576"/>    
+    <bendpoint x="2519" y="1057"/>    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="26"/>  
+  </dependency>  
+  <dependency id="134">    
+    <bendpoint x="2602" y="2343"/>    
+    <bendpoint x="2602" y="2968"/>    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="7"/>  
+  </dependency>  
+  <dependency id="135">    
+    <bendpoint x="901" y="1057"/>    
+    <bendpoint x="901" y="1700"/>    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="33"/>  
+  </dependency>  
+  <dependency id="136">    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="27"/>  
+  </dependency>  
+  <dependency id="137">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="23"/>  
+  </dependency>  
+  <dependency id="138">    
+    <bendpoint x="2121" y="347"/>    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="20"/>  
+  </dependency>  
+  <dependency id="139">    
+    <end type="SOURCE" refId="31"/>    
+    <end type="TARGET" refId="24"/>  
+  </dependency>  
+  <dependency id="140">    
+    <end type="SOURCE" refId="29"/>    
+    <end type="TARGET" refId="13"/>  
+  </dependency>  
+  <dependency id="141">    
+    <end type="SOURCE" refId="31"/>    
+    <end type="TARGET" refId="9"/>  
+  </dependency>  
+  <dependency id="142">    
+    <end type="SOURCE" refId="28"/>    
+    <end type="TARGET" refId="7"/>  
+  </dependency>  
+  <dependency id="143">    
+    <end type="SOURCE" refId="12"/>    
+    <end type="TARGET" refId="13"/>  
+  </dependency>  
+  <dependency id="144">    
+    <end type="SOURCE" refId="26"/>    
+    <end type="TARGET" refId="33"/>  
+  </dependency>  
+  <dependency id="145">    
+    <bendpoint x="1788" y="576"/>    
+    <bendpoint x="1781" y="1057"/>    
+    <bendpoint x="1781" y="1700"/>    
+    <end type="SOURCE" refId="32"/>    
+    <end type="TARGET" refId="33"/>  
+  </dependency>  
+  <dependency id="146">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="19"/>  
+  </dependency>  
+  <dependency id="147">    
+    <end type="SOURCE" refId="12"/>    
+    <end type="TARGET" refId="17"/>  
+  </dependency>  
+  <dependency id="148">    
+    <end type="SOURCE" refId="15"/>    
+    <end type="TARGET" refId="12"/>  
+  </dependency>  
+  <dependency id="149">    
+    <bendpoint x="2142" y="347"/>    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="30"/>  
+  </dependency>  
+  <realization id="150">    
+    <end type="SOURCE" refId="28"/>    
+    <end type="TARGET" refId="6"/>  
+  </realization>  
+  <dependency id="151">    
+    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="15"/>  
+  </dependency>  
+  <association id="152">    
+    <bendpoint x="754" y="1700"/>    
+    <end type="SOURCE" refId="12" navigable="false">      
+      <attribute id="153" name="pointList"/>      
+      <multiplicity id="154" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="16" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <dependency id="155">    
+    <bendpoint x="2456" y="1057"/>    
+    <bendpoint x="2562" y="1700"/>    
+    <bendpoint x="2541" y="2343"/>    
+    <bendpoint x="2499" y="2968"/>    
+    <bendpoint x="2499" y="3323"/>    
+    <end type="SOURCE" refId="30"/>    
+    <end type="TARGET" refId="27"/>  
+  </dependency>  
+  <dependency id="156">    
+    <bendpoint x="1746" y="576"/>    
+    <bendpoint x="1288" y="1057"/>    
+    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="13"/>  
+  </dependency>  
+  <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+    accessors="true" visibility="true">    
+    <attributes public="true" package="true" protected="true" private="true"/>    
+    <operations public="true" package="true" protected="true" private="true"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>
